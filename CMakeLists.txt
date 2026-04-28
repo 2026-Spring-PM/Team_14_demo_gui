@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 2.6 COMPONENTS graphics audio window system REQUIRED)
 
+find_package(OpenGL REQUIRED)
+
 set(IMGUI_DIR      ${CMAKE_SOURCE_DIR}/src/imgui)
 set(IMGUI_SFML_DIR ${CMAKE_SOURCE_DIR}/src/imgui-sfml)
 
@@ -26,6 +28,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     src
     ${IMGUI_DIR}
     ${IMGUI_SFML_DIR}
+    ${OPENGL_INCLUDE_DIR}
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -33,7 +36,7 @@ target_link_libraries(${PROJECT_NAME}
     sfml-audio
     sfml-window
     sfml-system
-    OpenGL
+    ${OPENGL_LIBRARIES}
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
