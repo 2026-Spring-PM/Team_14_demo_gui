@@ -2,6 +2,8 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
+// 아래있는 코드는 예시 코드를 넣은 것 뿐이라, 대부분 지우고 다시 쓰는 것을 추천해!
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Team14 Game");
     ImGui::SFML::Init(window);
