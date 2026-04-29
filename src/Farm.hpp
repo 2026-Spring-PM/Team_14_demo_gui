@@ -5,8 +5,8 @@
 
 class Farm {
 public:
-    static const int ROWS = 1111; // TODO : 기획에 맞게 수정
-    static const int COLS = 1111;
+    static const int ROWS = 77; // TODO : 기획에 맞게 수정
+    static const int COLS = 77;
 
     Seed* SeedField[ROWS][COLS];
     Trap* TrapField[ROWS][COLS];

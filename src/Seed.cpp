@@ -1,9 +1,9 @@
 #include "Seed.hpp"
 
-Seed::Seed() : Name(""), Price(0), Value(0), CoolDown(0), Timer(0), Humid(100), HumidTimer(0), Type(SeedType::NONE), State(State::NONE) {}
+Seed::Seed() : Name(""), Price(0), Value(0), CoolDown(0), Timer(0), Humid(100), HumidTimer(0), Type(SeedType::NONE), FieldState(State::NONE) {}
 
 Seed::Seed(std::string name, int price, int value, int cooldown, SeedType type)
-    : Name(name), Price(price), Value(value), CoolDown(cooldown), Timer(0), Humid(100), HumidTimer(0), Type(type), State(State::NONE) {}
+    : Name(name), Price(price), Value(value), CoolDown(cooldown), Timer(0), Humid(100), HumidTimer(0), Type(type), FieldState(State::NONE) {}
 
 void Seed::UpdateHumid(bool isDrought) {
     int decrement = isDrought ? 2 : 1;
@@ -18,7 +18,7 @@ void Seed::UpdateTimer() {
 }
 
 void Seed::IsDead() {
-    if(HimidTimer >= 30) FieldState = State::DEAD;
+    if(HumidTimer >= 30) FieldState = State::DEAD;
 }
 
 bool Seed::IsGrown() const {

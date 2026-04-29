@@ -1,4 +1,6 @@
 #include "Farm.hpp"
+#include "Mechanism.hpp"
+#include "GameData.hpp"
 #include <cstdlib>
 
 Farm::Farm() : Day(1), Hour(6), Minute(0), IsDrought(false), IsPest(false) {
@@ -29,23 +31,38 @@ void Farm::AddTime(int minutes) {
 
 bool Farm::PlantSeed(int r, int c, SeedType type) {
     if (SeedField[r][c] != nullptr) return false;
-    SeedField[r][c] = new Seed();
-    AddTime(TimeWaste::SEEDSET);
-    return true;
+
+    auto it = GameData::SeedTable.find(type);
+    if (it != GameData::SeedTable.end()) {
+        const SeedData& data = it->second;
+
+        SeedField[r][c] = new Seed(data.Name, data.Price, data.Value, data.CoolDown, type);
+        AddTime(GameData::InstallPlantTimeCost);
+        return true;
+    }
+    return false;
 }
 
 void Farm::WaterSeed(int r, int c) {
     if (SeedField[r][c] != nullptr) {
         SeedField[r][c]->Humid = 100;
-        AddTime(TimeWaste::WATERING);
+        AddTime(GameData::WateringTimeCost);
     }
 }
 
 bool Farm::InstallTrap(int r, int c, TrapType type) {
     if (TrapField[r][c] != nullptr) return false;
-    TrapField[r][c] = new Trap();
-    AddTime(TimeWaste::TRAPSET);
-    return true;
+    std::pair<int, int> pos = {r, c};
+
+    auto it = GameData::TrapTable.find(type);
+    if (it != GameData::TrapTable.end()) {
+        const TrapData& data = it->second;
+
+        TrapField[r][c] = new Trap(data.Name, data.Price, data.Atk, data.CoolDown, pos, data.Range, type);
+        AddTime(GameData::InstallTrapTimeCost);
+        return true;
+    }
+    return false;
 }
 
 void Farm::UpdateFields() {
@@ -69,9 +86,16 @@ void Farm::UpdateFields() {
 }
 
 void Farm::TriggerDayRandomEvent() {
-    // TODO: 낮 이벤트 발생 로직 구현 (가뭄, 병충해)
+    IsDrought = DroughtTrigger();
+    IsPest = PestTrigger();
 }
 
 void Farm::TriggerNightRandomEvent() {
-    // TODO: 밤 이벤트 발생 로직 구현 (설치된 Trap 중 N개 Breakdown)
+    for (int r = 0; r < ROWS; r++) {
+        for (int c = 0; c < COLS; c++) {
+            if (TrapField[r][c] != nullptr && TrapField[r][c]->TrapState == State::ALIVE) {
+                if (TrapBreakTrigger()) TrapField[r][c]->Breakdown();
+            }
+        }
+    }
 }

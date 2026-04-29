@@ -1,8 +1,8 @@
 #include "Inventory.hpp"
 
 Inventory::Inventory() : Bullets(0) {
-    SeedCount[SeedType::None] = 0;
-    TrapCount[TrapType::None] = 0;
+    SeedCount[SeedType::NONE] = 0;
+    TrapCount[TrapType::NONE] = 0;
 }
 
 void Inventory::AddSeed(SeedType type, int amount) {

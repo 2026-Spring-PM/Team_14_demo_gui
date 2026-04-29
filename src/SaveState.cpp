@@ -1,6 +1,6 @@
 #include "SaveState.hpp"
 
-SaveState::SaveState() : Life(1), Money(0) {}
+SaveState::SaveState() : Money(0) {}
 
 void SaveState::AddMoney(int amount) {
     Money += amount;

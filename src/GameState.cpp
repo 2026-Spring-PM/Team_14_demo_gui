@@ -1,7 +1,12 @@
 #include "GameState.hpp"
 #include "Mechanism.hpp"
+#include "GameData.hpp"
 
-GameState::GameState() : status(Status::Main), Level(1) {}
+GameState::GameState() : status(Status::MAIN), Level(1) {}
+
+void GameState::ChangePlaybackSpeed(int speed) {
+    PlaybackSpeed = speed;
+}
 
 void GameState::Update() {
     if (status == Status::AM) {
@@ -10,27 +15,35 @@ void GameState::Update() {
         }
     }
     else if (status == Status::PM) {
-        for (auto it = PendingEnemies.begin(); it != PendingEnemies.end();) {
-            if (NightElapsedMinutes >= it->SpawnDelay) {
-                ActiveEnemies.push_back(*it);
-                it = PendingEnemies.erase(it);
-            } else ++it;
-        }
+        TickCounter += PlaybackSpeed;
 
-        for (int r = 0; r < state.farm.ROWS; r++) {
-            for (int c = 0; c < state.farm.COLS; c++) {
-                Trap* trap = state.farm.TrapField[r][c];
-                
-                if (trap != nullptr && trap->TrapState == State::ALIVE) {
-                    trap->UpdateTimer();
+        if (TickCounter >= 60) {
+            TickCounter -= 60;
 
-                    if (trap->Timer >= trap->CoolDown) {
-                        for (auto& enemy : ActiveEnemies) {
-                            if (enemy.EnemyState == State::ALIVE) {
-                                // TODO: 함정의 위치(r,c)와 적의 위치(Pos)를 계산해 사거리(Range) 내인지 판별하는 조건문 추가 필요
-                                enemy.TakeDamage(trap->Atk);
-                                trap->Timer = 0;
-                                // break; // 한 번에 한 명만 공격한다면 주석 제거
+            NightElapsedMinutes += 1;
+            state.farm.AddTime(1);
+
+            for (auto it = PendingEnemies.begin(); it != PendingEnemies.end();) {
+                if (NightElapsedMinutes >= it->SpawnDelay) {
+                    ActiveEnemies.push_back(*it);
+                    it = PendingEnemies.erase(it);
+                } else ++it;
+            }
+
+            for (int r = 0; r < state.farm.ROWS; r++) {
+                for (int c = 0; c < state.farm.COLS; c++) {
+                    Trap* trap = state.farm.TrapField[r][c];
+                    
+                    if (trap != nullptr && trap->TrapState == State::ALIVE) {
+                        trap->UpdateTimer();
+
+                        if (trap->Timer >= trap->CoolDown) {
+                            for (auto& enemy : ActiveEnemies) {
+                                if (enemy.EnemyState == State::ALIVE && trap->InRange(enemy)) {
+                                    enemy.TakeDamage(trap->Atk);
+                                    trap->Timer = 0;
+                                    // break; // 한 번에 한 명만 공격한다면 주석 제거 -> 이후 업데이트 시 범위 공격 등 추가
+                                }
                             }
                         }
                     }
@@ -39,11 +52,11 @@ void GameState::Update() {
         }
 
         for (auto it = ActiveEnemies.begin(); it != ActiveEnemies.end();) {
-            if (it.EnemyState == State::DEAD) {
-                // state.AddMoney(); // 적 사망 시 돈 추가하고 싶으면 코드 추가
+            if (it->EnemyState == State::DEAD) {
+                // state.AddMoney(); // 적 사망 시 돈 추가하고 싶으면 코드 추가 -> 이후 업데이트 시 있는 게 좋다면 추가
                 it = ActiveEnemies.erase(it);
             }
-            else if (it.EnemyState == State::ALIVE){
+            else if (it->EnemyState == State::ALIVE){
                 it->Move();
 
                 if (it->Pos >= 100) { // TODO: UI 및 향후 구현에 따른 100이라는 숫자 조정
@@ -66,31 +79,37 @@ void GameState::Update() {
 
 void GameState::VisitShop() {
     if (status != Status::AM) return;
-    state.farm.AddTime(TimeWaste::SHOPING);
+    state.farm.AddTime(GameData::ShoppingTimeCost);
     // TODO: 상점 UI 오픈 및 로직
 }
 
 void GameState::PlayMiniGame() {
     if (status != Status::AM) return;
-    state.farm.AddTime(TimeWaste::GAMBLING);
+    state.farm.AddTime(GameData::GamblingTimeCost);
     // TODO: 도박 로직 구현
 }
 
 void GameState::TransitionToNight() {
     status = Status::PM;
+
+    // TODO: 밤이 왔음을 알리는 창 띄우기 + OK를 누를 때까지 아래 코드는 실행X
+
     state.farm.TriggerNightRandomEvent();
     NightElapsedMinutes = 0;
     night = SetNightType();
 
     int enemyCount = EnemyCount(Level);
-    int enemySpeed = EnemySpeed(Level);
 
     ActiveEnemies.clear();
     PendingEnemies.clear();
 
     for(int i = 0; i < enemyCount; i++) {
-        // TODO: 이후 적 종류 다양화 함수 구현하여 넣기.
-        Enemy newEnemy(enemySpeed, EnemyType::Normal, 10, 100);
+        EnemyType type = EnemyTypeSet(Level);
+        int speed = EnemySpeed(Level, type);
+        int cooldown;
+        int hp;
+
+        Enemy newEnemy(speed, type, cooldown, hp);
         newEnemy.SpawnDelay = SpawnDelay(night);
         PendingEnemies.push_back(newEnemy);
     }
@@ -100,10 +119,13 @@ void GameState::TransitionToDay() {
     status = Status::AM;
     Level++;
 
+    // TODO: 낮으로 돌아올 때의 정산 처리 창 및 변수 초기화 과정 입력 + OK를 누를 때까지 아래 코드는 실행X
+
     state.farm.TriggerDayRandomEvent();
-    // TODO: 낮으로 돌아올 때의 정산 처리 및 변수 초기화
+
+    // TODO: 가뭄 및 병충해로 인한 변경 과정 작성
 }
 
 void GameState::PlayBGM(Status currentStatus) {
-    // TODO: Audio 재생 함수, 상태에 따라 다른 음악 재생할 것.
+    // TODO: Audio 재생 함수 구현. 상태에 따라 다른 음악 재생할 것.
 }

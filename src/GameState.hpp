@@ -16,11 +16,16 @@ public:
     int NightElapsedMinutes;
     NightType night;
 
+    int PlaybackSpeed;
+    int TickCounter;
+
     GameState();
 
     void Update();
     void VisitShop();
     void PlayMiniGame();
+
+    void ChangePlaybackSpeed(int speed);
 
     void TransitionToNight();
     void TransitionToDay();

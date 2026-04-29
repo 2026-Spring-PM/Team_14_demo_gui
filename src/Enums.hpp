@@ -6,14 +6,6 @@ enum class State {
     DEAD
 };
 
-enum class TimeWaste {
-    SEEDSET = 10,
-    TRAPSET = 10,
-    WATERING = 5,
-    SHOPING = 0,
-    GAMBLING = 1
-};
-
 enum class SeedType {
     NONE,
     SEED1,
@@ -47,8 +39,6 @@ enum class Status {
     PM,
     PAUSE,
     SHOP,
-    AMtoPM,
-    PMtoAM,
     GAMEOVER,
     MAIN
 };
