@@ -44,6 +44,41 @@ int main() {
     if (!gs.outsideTexture.loadFromFile("assets/image/Outside.png")) {
         std::cerr << "Failed to load Outside.png" << std::endl;
     }
+    if (!gs.riceSeedTexture.loadFromFile("assets/image/RiceShoot.png")) {
+        std::cerr << "Failed to load RiceShoot.png" << std::endl;
+    }
+    if (!gs.potatoSeedTexture.loadFromFile("assets/image/PotatoSeeds.png")) {
+        std::cerr << "Failed to load PotatoSeeds.png" << std::endl;
+    }
+    if (!gs.carrotSeedTexture.loadFromFile("assets/image/CarrotSeeds.png")) {
+        std::cerr << "Failed to load CarrotSeeds.png" << std::endl;
+    }
+    if (!gs.cowTrapTexture.loadFromFile("assets/image/Cow.png")) {
+        std::cerr << "Failed to load Cow.png" << std::endl;
+    }
+    if (!gs.pigTrapTexture.loadFromFile("assets/image/Pig.png")) {
+        std::cerr << "Failed to load Pig.png" << std::endl;
+    }
+    if (!gs.horseTrapTexture.loadFromFile("assets/image/Horse.png")) {
+        std::cerr << "Failed to load Horse.png" << std::endl;
+    }
+    if (!gs.immatureRiceTexture.loadFromFile("assets/image/ImmatureRice.png")) {
+        std::cerr << "Failed to load ImmatureRice.png" << std::endl;
+    }
+    if (!gs.immaturePotatoTexture.loadFromFile("assets/image/ImmaturePotato.png")) {
+        std::cerr << "Failed to load ImmaturePotato.png" << std::endl;
+    }
+    if (!gs.immatureCarrotTexture.loadFromFile("assets/image/ImmatureCarrot.png")) {
+        std::cerr << "Failed to load ImmatureCarrot.png" << std::endl;
+    }
+
+    gs.state.inventory.SeedCount[SeedType::SEED1] = 10; 
+    gs.state.inventory.SeedCount[SeedType::SEED2] = 5;  
+    gs.state.inventory.SeedCount[SeedType::SEED3] = 49; 
+
+    gs.state.inventory.TrapCount[TrapType::ANIMAL1] = 3;
+    gs.state.inventory.TrapCount[TrapType::ANIMAL2] = 2;
+    gs.state.inventory.TrapCount[TrapType::ANIMAL3] = 5;
 
     MainUI mUI(&gs);
     BottomUI bUI(&gs);

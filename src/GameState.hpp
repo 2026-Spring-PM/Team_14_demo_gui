@@ -35,10 +35,27 @@ public:
     
     bool showInv = false;
 
+    SeedType selectedSeed = SeedType::NONE; 
+    TrapType selectedTrap = TrapType::NONE;
+
+    int targetRow = -1;
+    int targetCol = -1;
+    bool wantToInstallTrap = false;
+    bool wantToPlantSeed = false;
+
     sf::Texture houseTexture;
     sf::Texture slingshotTexture;
     sf::Texture DoorTexture;
     sf::Texture roadTexture;
     sf::Texture fieldTexture;
     sf::Texture outsideTexture;
+    sf::Texture riceSeedTexture;
+    sf::Texture potatoSeedTexture;
+    sf::Texture carrotSeedTexture;
+    sf::Texture cowTrapTexture;
+    sf::Texture pigTrapTexture;
+    sf::Texture horseTrapTexture;
+    sf::Texture immatureRiceTexture;
+    sf::Texture immaturePotatoTexture;
+    sf::Texture immatureCarrotTexture;
 };

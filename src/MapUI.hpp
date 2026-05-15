@@ -1,6 +1,7 @@
 #pragma once
 #include "UIBase.hpp"
 #include <string>
+#include <utility>
 
 class MapUI : public UIBase {
 public:
@@ -22,6 +23,8 @@ public:
 
         ImGui::End();
         ImGui::PopStyleColor();
+
+        renderItemPreview();
     }
 
 private:
@@ -49,7 +52,6 @@ private:
                         ImGui::PushID(r * 9 + c); 
                         
                         ImVec2 posBefore = ImGui::GetCursorPos(); 
-                        
                         ImGui::Dummy({mergedWidth, tileHeight}); 
                         
                         ImGui::SameLine();
@@ -83,7 +85,6 @@ private:
                         ImGui::Image(doorSprite); 
                         
                         ImGui::SetCursorPos(posNextTile); 
-
                         ImGui::PopID(); 
                     }
                     continue; 
@@ -114,16 +115,64 @@ private:
                     
                     tileSprite.setScale({scaleX, scaleY});
                     ImGui::Image(tileSprite);
-                    
                     ImGui::SetCursorPos(currentCursorPos);
-                    
+
+                    if (tileType == 1 && gs->state.farm.SeedField[r][c] != nullptr) {
+                        SeedType sType = gs->state.farm.SeedField[r][c]->Type;
+                        sf::Texture* cropTex = nullptr;
+                        
+                        if (sType == SeedType::SEED1) cropTex = const_cast<sf::Texture*>(&gs->immatureRiceTexture);
+                        else if (sType == SeedType::SEED2) cropTex = const_cast<sf::Texture*>(&gs->immaturePotatoTexture);
+                        else if (sType == SeedType::SEED3) cropTex = const_cast<sf::Texture*>(&gs->immatureCarrotTexture);
+
+                        if (cropTex) {
+                            sf::Sprite cropSprite(*cropTex);
+                            // 칸 크기에 맞춰 스케일 조절
+                            cropSprite.setScale({tileWidth / cropTex->getSize().x, tileHeight / cropTex->getSize().y});
+                            ImGui::Image(cropSprite);
+                            ImGui::SetCursorPos(currentCursorPos);
+                        }
+                    } 
+                    else if (tileType == 0 && gs->state.farm.TrapField[r][c] != nullptr) {
+                        TrapType tType = gs->state.farm.TrapField[r][c]->Type;
+                        sf::Texture* tTex = nullptr;
+                        if (tType == TrapType::ANIMAL1) tTex = const_cast<sf::Texture*>(&gs->cowTrapTexture);
+                        else if (tType == TrapType::ANIMAL2) tTex = const_cast<sf::Texture*>(&gs->pigTrapTexture);
+                        else if (tType == TrapType::ANIMAL3) tTex = const_cast<sf::Texture*>(&gs->horseTrapTexture);
+
+                        if (tTex) {
+                            sf::Sprite tSprite(*tTex);
+                            // 칸 크기에 맞춰 스케일 조절
+                            tSprite.setScale({tileWidth / tTex->getSize().x, tileHeight / tTex->getSize().y});
+                            ImGui::Image(tSprite);
+                            ImGui::SetCursorPos(currentCursorPos);
+                        }
+                    }
+
                     if (tileType == 1 || tileType == 0) {
                         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
                         if (ImGui::Button("##tile", {tileWidth, tileHeight})) {
-                            if (tileType == 1) {
-                                // TODO: 씨앗 심기 등 밭 클릭 상호작용 연결
-                            } else if (tileType == 0) {
-                                // TODO: 함정 설치 등 빈칸(Outside) 클릭 상호작용 연결
+                            GameState* mgs = const_cast<GameState*>(gs);
+
+                            if (tileType == 1 && mgs->selectedSeed != SeedType::NONE && mgs->state.farm.SeedField[r][c] == nullptr) {
+                                SeedType heldSeed = mgs->selectedSeed;
+                                mgs->targetRow = r;
+                                mgs->targetCol = c;
+                                mgs->wantToPlantSeed = true;
+
+                                // TODO: 브릿지 연동 완료 시 GameData를 사용하도록 수정 필요
+                                mgs->state.farm.SeedField[r][c] = new Seed("Test", 0, 0, 0, heldSeed);
+                                mgs->selectedSeed = SeedType::NONE;
+                            } 
+                            else if (tileType == 0 && mgs->selectedTrap != TrapType::NONE && mgs->state.farm.TrapField[r][c] == nullptr) {
+                                TrapType heldTrap = mgs->selectedTrap;
+                                mgs->targetRow = r;
+                                mgs->targetCol = c;
+                                mgs->wantToInstallTrap = true;
+
+                                // TODO: 브릿지 연동 완료 시 GameData를 사용하도록 수정 필요
+                                mgs->state.farm.TrapField[r][c] = new Trap("Test", 0, 0, 0, std::make_pair(r, c), std::make_pair(0, 0), heldTrap);
+                                mgs->selectedTrap = TrapType::NONE;
                             }
                         }
                         ImGui::PopStyleColor();
@@ -137,5 +186,44 @@ private:
                 if (c < 8) ImGui::SameLine();
             }
         }
+    }
+
+    void renderItemPreview() {
+        if (gs->selectedTrap == TrapType::NONE && gs->selectedSeed == SeedType::NONE) return;
+
+        ImVec2 mousePos = ImGui::GetMousePos();
+        ImGui::SetNextWindowPos({mousePos.x - 40.0f, mousePos.y - 40.0f});
+        ImGui::SetNextWindowBgAlpha(0.0f); 
+
+        ImGuiWindowFlags previewFlags = 
+            ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | 
+            ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | 
+            ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
+        ImGui::Begin("ItemPreviewWindow", nullptr, previewFlags);
+
+        sf::Texture* tex = nullptr;
+        
+        // 아이템 선택 시, 해당 아이템의 텍스처를 지정
+        if (gs->selectedTrap != TrapType::NONE) {
+            if (gs->selectedTrap == TrapType::ANIMAL1) tex = const_cast<sf::Texture*>(&gs->cowTrapTexture);
+            else if (gs->selectedTrap == TrapType::ANIMAL2) tex = const_cast<sf::Texture*>(&gs->pigTrapTexture);
+            else if (gs->selectedTrap == TrapType::ANIMAL3) tex = const_cast<sf::Texture*>(&gs->horseTrapTexture);
+        } else if (gs->selectedSeed != SeedType::NONE) {
+            if (gs->selectedSeed == SeedType::SEED1) tex = const_cast<sf::Texture*>(&gs->riceSeedTexture);
+            else if (gs->selectedSeed == SeedType::SEED2) tex = const_cast<sf::Texture*>(&gs->potatoSeedTexture);
+            else if (gs->selectedSeed == SeedType::SEED3) tex = const_cast<sf::Texture*>(&gs->carrotSeedTexture);
+        }
+
+        if (tex && tex->getSize().x > 0) {
+            sf::Sprite previewSprite(*tex);
+            float scaleX = 80.0f / tex->getSize().x;
+            float scaleY = 80.0f / tex->getSize().y;
+            previewSprite.setScale({scaleX, scaleY});
+            previewSprite.setColor(sf::Color(255, 255, 255, 100)); 
+            ImGui::Image(previewSprite);
+        }
+
+        ImGui::End();
     }
 };

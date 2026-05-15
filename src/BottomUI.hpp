@@ -18,10 +18,6 @@ public:
         ImGui::PushStyleColor(ImGuiCol_Text, textCol);
 
         ImGui::Begin("BottomBar", nullptr, flgs);
-
-        // TODO: GameState에 bool showInv; 변수 추가
-	// 인벤토리 버튼이 눌리면 showInv가 true로 바뀜
-	// if (gs->showInv) 이런 식으로 if문을 바꾸면 정상 작동.
         
         if (!gs->showInv) renderStat(); else renderInv();
 
@@ -37,31 +33,24 @@ private:
         float windowWidth = ImGui::GetWindowSize().x;
         float contentWidth = 1100.0f; 
 
-        // 하단 바 콘텐츠 수직 중앙 정렬 시작점 설정
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 30);
         
         ImGui::BeginGroup(); 
         
-        // 1. 총알 표시 영역 (제공된 새총 이미지 사용)
         ImGui::SetCursorPosX(50); 
         
         sf::Sprite slingshotSprite;
         slingshotSprite.setTexture(gs->slingshotTexture);
-        // --- 수정된 부분: 새총 이미지 크기를 하단바에 맞춰 축소 ---
         slingshotSprite.setScale({1.2f, 1.2f});
         
-        // 이미지를 살짝 위로 정렬 (글자와 맞추기 위함)
         ImVec2 cur = ImGui::GetCursorPos();
         ImGui::SetCursorPos({cur.x, cur.y - 10.0f});
         ImGui::Image(slingshotSprite);
         
         ImGui::SameLine(); 
-        
-        // --- 수정된 부분: 새총 이미지와 텍스트의 수직 정렬을 맞춤 ---
         ImGui::SetCursorPos({ImGui::GetCursorPosX(), cur.y + 10.0f}); 
         ImGui::Text("x%d", gs->state.inventory.Bullets); 
 
-        // 2. 상점 및 재생속도 영역 (오프셋 수정)
         ImGui::SameLine(200); 
         if (gs->status == Status::PM) ImGui::BeginDisabled();
         if (ImGui::Button("상점", {60, 40})) {
@@ -79,18 +68,14 @@ private:
             // TODO: 배속 변경 
         }
 
-        // 3. 날짜 및 시간 영역
         ImGui::SameLine(500); 
         ImGui::Text("Day %d | %02d:%02d", gs->state.farm.Day, gs->state.farm.Hour, gs->state.farm.Minute);
 
-        // 4. 인벤토리 확인 버튼 영역
         ImGui::SameLine(800); 
         if (ImGui::Button("인벤토리 확인", {150, 40})) {
-            // TODO: showInv = true;
             const_cast<GameState*>(gs)->showInv = true;
         }
 
-        // 5. Cash 표시 영역
         ImGui::SameLine(1080); 
         ImGui::Text("Cash: $%d", gs->state.Money);
 
@@ -98,47 +83,117 @@ private:
     }
 
     void renderInv() {
-        if (ImGui::Button("Back", {80, 80})) { 
-            /* TODO: [Role 3] showInv = false; */ 
+        if (ImGui::Button("돌아가기", {80, 80})) { 
             const_cast<GameState*>(gs)->showInv = false;
         }
         ImGui::SameLine(120);
         
-        ImGui::BeginGroup();
-
+        if (ImGui::Button("씨앗/함정\n변경 버튼", {120, 80})) { 
+            isTrapTab = !isTrapTab; 
+        }
+        ImGui::SameLine(280);
+        
+        // 1. 씨앗 탭 렌더링
         if (!isTrapTab) {
             for (auto const& [type, count] : gs->state.inventory.SeedCount) { 
                 if (type == SeedType::NONE) continue;
                 
                 ImGui::PushID((int)type);
-                if (ImGui::Button("Seed\nIMG", {60, 60})) { 
-                    // TODO: 이 씨앗을 심을 아이템으로 선택 
+                ImGui::BeginGroup();
+
+                sf::Texture* tex = nullptr;
+                if (type == SeedType::SEED1) tex = const_cast<sf::Texture*>(&gs->riceSeedTexture);
+                else if (type == SeedType::SEED2) tex = const_cast<sf::Texture*>(&gs->potatoSeedTexture);
+                else if (type == SeedType::SEED3) tex = const_cast<sf::Texture*>(&gs->carrotSeedTexture);
+
+                ImVec2 startPos = ImGui::GetCursorPos();
+                
+                if (tex && tex->getSize().x > 0) {
+                    sf::Sprite seedSprite(*tex);
+                    float scaleX = 60.0f / tex->getSize().x;
+                    float scaleY = 60.0f / tex->getSize().y;
+                    seedSprite.setScale({scaleX, scaleY});
+                    ImGui::Image(seedSprite);
+                } else {
+                    ImGui::Dummy({60.0f, 60.0f});
                 }
-                ImGui::Text("x%d", count);
-                ImGui::SameLine(0, 20);
+                
+                ImGui::SetCursorPos(startPos);
+                
+                // [선택 상태 시각화] 선택된 씨앗이면 배경을 반투명한 흰색으로 하이라이트
+                bool isSelected = (gs->selectedSeed == type);
+                ImVec4 btnColor = isSelected ? ImVec4(1.0f, 1.0f, 1.0f, 0.3f) : ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+                
+                ImGui::PushStyleColor(ImGuiCol_Button, btnColor);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.4f)); 
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+
+                if (ImGui::Button("##seedBtn", {60, 60})) { 
+                    const_cast<GameState*>(gs)->selectedSeed = type;
+                    const_cast<GameState*>(gs)->selectedTrap = TrapType::NONE;
+                }
+                
+                ImGui::PopStyleColor(3);
+
+                ImGui::SameLine();
+                ImGui::SetCursorPosY(startPos.y + 20.0f); 
+                ImGui::Text("X %d", count);
+                
+                ImGui::EndGroup(); 
+                ImGui::SameLine(0, 20); 
                 ImGui::PopID();
             }
         } 
+        // 2. 함정 탭 렌더링
         else {
             for (auto const& [type, count] : gs->state.inventory.TrapCount) { 
                 if (type == TrapType::NONE) continue;
                 
                 ImGui::PushID((int)type + 100); 
-                if (ImGui::Button("Trap\nIMG", {60, 60})) { 
-                    // TODO: [Role 3] 이 함정을 설치할 아이템으로 선택 
+                ImGui::BeginGroup();
+
+                sf::Texture* tex = nullptr;
+                if (type == TrapType::ANIMAL1) tex = const_cast<sf::Texture*>(&gs->cowTrapTexture);
+                else if (type == TrapType::ANIMAL2) tex = const_cast<sf::Texture*>(&gs->pigTrapTexture);
+                else if (type == TrapType::ANIMAL3) tex = const_cast<sf::Texture*>(&gs->horseTrapTexture);
+
+                ImVec2 startPos = ImGui::GetCursorPos();
+
+                if (tex && tex->getSize().x > 0) {
+                    sf::Sprite trapSprite(*tex);
+                    float scaleX = 60.0f / tex->getSize().x;
+                    float scaleY = 60.0f / tex->getSize().y;
+                    trapSprite.setScale({scaleX, scaleY});
+                    ImGui::Image(trapSprite);
+                } else {
+                    ImGui::Dummy({60.0f, 60.0f});
                 }
-                ImGui::Text("x%d", count);
+                
+                ImGui::SetCursorPos(startPos);
+                
+                // [선택 상태 시각화] 선택된 함정이면 배경을 반투명한 흰색으로 하이라이트
+                bool isSelected = (gs->selectedTrap == type);
+                ImVec4 btnColor = isSelected ? ImVec4(1.0f, 1.0f, 1.0f, 0.3f) : ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+                ImGui::PushStyleColor(ImGuiCol_Button, btnColor);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 1.0f, 1.0f, 0.4f)); 
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+
+                if (ImGui::Button("##trapBtn", {60, 60})) { 
+                    const_cast<GameState*>(gs)->selectedTrap = type;
+                    const_cast<GameState*>(gs)->selectedSeed = SeedType::NONE;
+                }
+                
+                ImGui::PopStyleColor(3);
+
+                ImGui::SameLine();
+                ImGui::SetCursorPosY(startPos.y + 20.0f);
+                ImGui::Text("X %d", count);
+                
+                ImGui::EndGroup();
                 ImGui::SameLine(0, 20);
                 ImGui::PopID();
             }
-        }
-        
-        ImGui::EndGroup();
-
-        ImGui::SameLine(1100);
-        
-        if (ImGui::Button("Seed/Trap\nSwitch", {120, 80})) { 
-            isTrapTab = !isTrapTab; 
         }
     }
 };
