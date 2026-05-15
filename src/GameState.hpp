@@ -3,6 +3,7 @@
 #include "SaveState.hpp"
 #include "Enemy.hpp"
 #include <vector>
+#include <SFML/Graphics.hpp>
 
 class GameState {
 public:
@@ -31,4 +32,13 @@ public:
     void TransitionToDay();
 
     void PlayBGM(Status currentStatus);
+    
+    bool showInv = false;
+
+    sf::Texture houseTexture;
+    sf::Texture slingshotTexture;
+    sf::Texture DoorTexture;
+    sf::Texture roadTexture;
+    sf::Texture fieldTexture;
+    sf::Texture outsideTexture;
 };

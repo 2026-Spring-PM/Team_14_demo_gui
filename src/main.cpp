@@ -24,6 +24,26 @@ int main() {
 
     GameState gs;
     gs.status = Status::AM; 
+    gs.showInv = false;
+
+    if (!gs.houseTexture.loadFromFile("assets/image/House.png")) {
+        std::cerr << "Failed to load House.png" << std::endl;
+    }
+    if (!gs.slingshotTexture.loadFromFile("assets/image/Slingshot.png")) {
+        std::cerr << "Failed to load Slingshot.png" << std::endl;
+    }
+    if (!gs.DoorTexture.loadFromFile("assets/image/Door.png")) {
+        std::cerr << "Failed to load Door.png" << std::endl;
+    }
+    if (!gs.roadTexture.loadFromFile("assets/image/Road.png")) {
+        std::cerr << "Failed to load Road.png" << std::endl;
+    }
+    if (!gs.fieldTexture.loadFromFile("assets/image/Field.png")) {
+        std::cerr << "Failed to load Field.png" << std::endl;
+    }
+    if (!gs.outsideTexture.loadFromFile("assets/image/Outside.png")) {
+        std::cerr << "Failed to load Outside.png" << std::endl;
+    }
 
     MainUI mUI(&gs);
     BottomUI bUI(&gs);
@@ -52,6 +72,7 @@ int main() {
                 if (event.key.code == sf::Keyboard::Num2) testPause = !testPause;
                 if (event.key.code == sf::Keyboard::Num3) testNight = !testNight;
                 if (event.key.code == sf::Keyboard::Num4) testOver = !testOver;
+                if (event.key.code == sf::Keyboard::Num5) gs.showInv = !gs.showInv;
             }
         }
 
@@ -59,7 +80,6 @@ int main() {
         
         window.clear(sf::Color(45, 45, 45));
 
-        
         mapUI.Render();
         bUI.Render();
 
@@ -74,6 +94,7 @@ int main() {
         ImGui::Text("숫자키 2: 일시정지 창 켜기/끄기");
         ImGui::Text("숫자키 3: 밤 알림 창 켜기/끄기");
         ImGui::Text("숫자키 4: 게임오버 창 켜기/끄기");
+        ImGui::Text("숫자키 5: 하단 인벤토리 전환");
         ImGui::End();
 
         ImGui::SFML::Render(window);
