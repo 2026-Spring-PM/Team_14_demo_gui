@@ -24,7 +24,7 @@ public:
 
 private:
     void renderStat() {
-        ImGui::Text("Ammo: x%d", gs->state.inventory.Bullets); [cite: 77, 93]
+        ImGui::Text("Ammo: x%d", gs->state.inventory.Bullets); 
         
         ImGui::SameLine(200);
         if (gs->status == Status::PM) ImGui::BeginDisabled();
@@ -40,21 +40,21 @@ private:
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 10);
 
         char sTxt[32];
-        sprintf(sTxt, "재생속도(%dx)", gs->PlaybackSpeed); [cite: 63]
+        sprintf(sTxt, "재생속도(%dx)", gs->PlaybackSpeed); 
         if (ImGui::Button(sTxt, {100, 40})) {
             // TODO: 배속 변경 
         }
 
         ImGui::SameLine(520);
-        ImGui::Text("Day %d | %02d:%02d", gs->state.farm.Day, gs->state.farm.Hour, gs->state.farm.Minute); [cite: 28, 98]
+        ImGui::Text("Day %d | %02d:%02d", gs->state.farm.Day, gs->state.farm.Hour, gs->state.farm.Minute); 
 
         ImGui::SameLine(850);
-        if (ImGui::Button("인벤토리 확인", {150, 40})) { [cite: 101]
+        if (ImGui::Button("인벤토리 확인", {150, 40})) { 
             // TODO: showInv = true;
         }
 
         ImGui::SameLine(1120);
-        ImGui::Text("Cash: $%d", gs->state.Money); [cite: 35, 102]
+        ImGui::Text("Cash: $%d", gs->state.Money); 
     }
 
     void renderInv() {
@@ -65,6 +65,7 @@ private:
         
         ImGui::BeginGroup();
 
+	static bool isTrapTab = false;
         if (!isTrapTab) {
             for (auto const& [type, count] : gs->state.inventory.SeedCount) { 
                 if (type == SeedType::NONE) continue;
