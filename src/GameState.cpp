@@ -1,6 +1,7 @@
 #include "GameState.hpp"
 #include "Mechanism.hpp"
 #include "GameData.hpp"
+#include <iostream>
 
 GameState::GameState() : status(Status::MAIN), Level(1) {}
 
@@ -128,4 +129,67 @@ void GameState::TransitionToDay() {
 
 void GameState::PlayBGM(Status currentStatus) {
     // TODO: Audio 재생 함수 구현. 상태에 따라 다른 음악 재생할 것.
+}
+
+void GameState::LoadAllTextures() {
+    if (!houseTexture.loadFromFile("assets/image/House.png")) {
+        std::cerr << "Failed to load House.png" << std::endl;
+    }
+    if (!slingshotTexture.loadFromFile("assets/image/Slingshot.png")) {
+        std::cerr << "Failed to load Slingshot.png" << std::endl;
+    }
+    if (!DoorTexture.loadFromFile("assets/image/Door.png")) {
+        std::cerr << "Failed to load Door.png" << std::endl;
+    }
+    if (!roadTexture.loadFromFile("assets/image/Road.png")) {
+        std::cerr << "Failed to load Road.png" << std::endl;
+    }
+    if (!fieldTexture.loadFromFile("assets/image/Field.png")) {
+        std::cerr << "Failed to load Field.png" << std::endl;
+    }
+    if (!outsideTexture.loadFromFile("assets/image/Outside.png")) {
+        std::cerr << "Failed to load Outside.png" << std::endl;
+    }
+    if (!riceSeedTexture.loadFromFile("assets/image/RiceShoot.png")) {
+        std::cerr << "Failed to load RiceShoot.png" << std::endl;
+    }
+    if (!potatoSeedTexture.loadFromFile("assets/image/PotatoSeeds.png")) {
+        std::cerr << "Failed to load PotatoSeeds.png" << std::endl;
+    }
+    if (!carrotSeedTexture.loadFromFile("assets/image/CarrotSeeds.png")) {
+        std::cerr << "Failed to load CarrotSeeds.png" << std::endl;
+    }
+    if (!cowTrapTexture.loadFromFile("assets/image/Cow.png")) {
+        std::cerr << "Failed to load Cow.png" << std::endl;
+    }
+    if (!pigTrapTexture.loadFromFile("assets/image/Pig.png")) {
+        std::cerr << "Failed to load Pig.png" << std::endl;
+    }
+    if (!horseTrapTexture.loadFromFile("assets/image/Horse.png")) {
+        std::cerr << "Failed to load Horse.png" << std::endl;
+    }
+    if (!immatureRiceTexture.loadFromFile("assets/image/ImmatureRice.png")) {
+        std::cerr << "Failed to load ImmatureRice.png" << std::endl;
+    }
+    if (!immaturePotatoTexture.loadFromFile("assets/image/ImmaturePotato.png")) {
+        std::cerr << "Failed to load ImmaturePotato.png" << std::endl;
+    }
+    if (!immatureCarrotTexture.loadFromFile("assets/image/ImmatureCarrot.png")) {
+        std::cerr << "Failed to load ImmatureCarrot.png" << std::endl;
+    }
+    if (!matureRiceTexture.loadFromFile("assets/image/MatureRice.png")) {
+        std::cerr << "Failed to load MatureRice.png" << std::endl;
+    }
+    if (!maturePotatoTexture.loadFromFile("assets/image/MaturePotato.png")) {
+        std::cerr << "Failed to load MaturePotato.png" << std::endl;
+    }
+    if (!matureCarrotTexture.loadFromFile("assets/image/MatureCarrot.png")) {
+        std::cerr << "Failed to load MatureCarrot.png" << std::endl;
+    }
+    if (!wateringCanTexture.loadFromFile("assets/image/WateringCan.png")) {
+        std::cerr << "Failed to load WateringCan.png" << std::endl;
+    }
+    if (!clockTexture.loadFromFile("assets/image/Clock.png")) {
+        std::cerr << "Failed to load Clock.png" << std::endl;
+    }
 }

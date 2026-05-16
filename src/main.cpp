@@ -26,51 +26,7 @@ int main() {
     gs.status = Status::AM; 
     gs.showInv = false;
 
-    if (!gs.houseTexture.loadFromFile("assets/image/House.png")) {
-        std::cerr << "Failed to load House.png" << std::endl;
-    }
-    if (!gs.slingshotTexture.loadFromFile("assets/image/Slingshot.png")) {
-        std::cerr << "Failed to load Slingshot.png" << std::endl;
-    }
-    if (!gs.DoorTexture.loadFromFile("assets/image/Door.png")) {
-        std::cerr << "Failed to load Door.png" << std::endl;
-    }
-    if (!gs.roadTexture.loadFromFile("assets/image/Road.png")) {
-        std::cerr << "Failed to load Road.png" << std::endl;
-    }
-    if (!gs.fieldTexture.loadFromFile("assets/image/Field.png")) {
-        std::cerr << "Failed to load Field.png" << std::endl;
-    }
-    if (!gs.outsideTexture.loadFromFile("assets/image/Outside.png")) {
-        std::cerr << "Failed to load Outside.png" << std::endl;
-    }
-    if (!gs.riceSeedTexture.loadFromFile("assets/image/RiceShoot.png")) {
-        std::cerr << "Failed to load RiceShoot.png" << std::endl;
-    }
-    if (!gs.potatoSeedTexture.loadFromFile("assets/image/PotatoSeeds.png")) {
-        std::cerr << "Failed to load PotatoSeeds.png" << std::endl;
-    }
-    if (!gs.carrotSeedTexture.loadFromFile("assets/image/CarrotSeeds.png")) {
-        std::cerr << "Failed to load CarrotSeeds.png" << std::endl;
-    }
-    if (!gs.cowTrapTexture.loadFromFile("assets/image/Cow.png")) {
-        std::cerr << "Failed to load Cow.png" << std::endl;
-    }
-    if (!gs.pigTrapTexture.loadFromFile("assets/image/Pig.png")) {
-        std::cerr << "Failed to load Pig.png" << std::endl;
-    }
-    if (!gs.horseTrapTexture.loadFromFile("assets/image/Horse.png")) {
-        std::cerr << "Failed to load Horse.png" << std::endl;
-    }
-    if (!gs.immatureRiceTexture.loadFromFile("assets/image/ImmatureRice.png")) {
-        std::cerr << "Failed to load ImmatureRice.png" << std::endl;
-    }
-    if (!gs.immaturePotatoTexture.loadFromFile("assets/image/ImmaturePotato.png")) {
-        std::cerr << "Failed to load ImmaturePotato.png" << std::endl;
-    }
-    if (!gs.immatureCarrotTexture.loadFromFile("assets/image/ImmatureCarrot.png")) {
-        std::cerr << "Failed to load ImmatureCarrot.png" << std::endl;
-    }
+    gs.LoadAllTextures();
 
     gs.state.inventory.SeedCount[SeedType::SEED1] = 10; 
     gs.state.inventory.SeedCount[SeedType::SEED2] = 5;  
@@ -98,7 +54,7 @@ int main() {
         sf::Event event;
         while (window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(window, event);
-            
+
             if (event.type == sf::Event::Closed)
                 window.close();
 
@@ -112,7 +68,7 @@ int main() {
         }
 
         ImGui::SFML::Update(window, clock.restart());
-        
+
         window.clear(sf::Color(45, 45, 45));
 
         mapUI.Render();
@@ -137,7 +93,7 @@ int main() {
     }
 
     ImGui::SFML::Shutdown();
-    
+   
     std::cout << "UI Test Finished!" << std::endl;
     return 0;
 }

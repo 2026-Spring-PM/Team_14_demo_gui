@@ -43,6 +43,8 @@ public:
     bool wantToInstallTrap = false;
     bool wantToPlantSeed = false;
 
+    void LoadAllTextures();
+
     sf::Texture houseTexture;
     sf::Texture slingshotTexture;
     sf::Texture DoorTexture;
@@ -58,4 +60,9 @@ public:
     sf::Texture immatureRiceTexture;
     sf::Texture immaturePotatoTexture;
     sf::Texture immatureCarrotTexture;
+    sf::Texture wateringCanTexture;
+    sf::Texture clockTexture;
+    sf::Texture matureRiceTexture;
+    sf::Texture maturePotatoTexture;
+    sf::Texture matureCarrotTexture;
 };

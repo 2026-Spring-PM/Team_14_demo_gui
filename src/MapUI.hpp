@@ -2,6 +2,7 @@
 #include "UIBase.hpp"
 #include <string>
 #include <utility>
+#include <SFML/Window/Keyboard.hpp>
 
 class MapUI : public UIBase {
 public:
@@ -29,6 +30,15 @@ public:
 
 private:
     void renderIntegratedMap() {
+        // TODO: 'G'를 누르면 성장 상태가되는 코드(디버그용). 작물 시간에 따라 성장상태가 되도록 수정 필요.
+        static bool debugMatureToggle = false;
+        static bool prevG = false;
+        bool currG = sf::Keyboard::isKeyPressed(sf::Keyboard::G);
+        if (currG && !prevG) {
+            debugMatureToggle = !debugMatureToggle;
+        }
+        prevG = currG;
+
         int layout[5][9] = {
             {1, 1, 1, 0, 0, 0, 0, 0, 0}, 
             {1, 1, 1, 0, 0, 0, 0, 0, 0}, 
@@ -115,22 +125,62 @@ private:
                     
                     tileSprite.setScale({scaleX, scaleY});
                     ImGui::Image(tileSprite);
-                    ImGui::SetCursorPos(currentCursorPos);
-
+                    
                     if (tileType == 1 && gs->state.farm.SeedField[r][c] != nullptr) {
                         SeedType sType = gs->state.farm.SeedField[r][c]->Type;
                         sf::Texture* cropTex = nullptr;
                         
-                        if (sType == SeedType::SEED1) cropTex = const_cast<sf::Texture*>(&gs->immatureRiceTexture);
-                        else if (sType == SeedType::SEED2) cropTex = const_cast<sf::Texture*>(&gs->immaturePotatoTexture);
-                        else if (sType == SeedType::SEED3) cropTex = const_cast<sf::Texture*>(&gs->immatureCarrotTexture);
+                        // TODO:임시 코드. 실제 연동 시 gs->state.farm.SeedField[r][c]->IsMature() 등의 판별 필요.
+                        bool isMature = debugMatureToggle; 
+                        
+                        if (sType == SeedType::SEED1) cropTex = isMature ? const_cast<sf::Texture*>(&gs->matureRiceTexture) : const_cast<sf::Texture*>(&gs->immatureRiceTexture);
+                        else if (sType == SeedType::SEED2) cropTex = isMature ? const_cast<sf::Texture*>(&gs->maturePotatoTexture) : const_cast<sf::Texture*>(&gs->immaturePotatoTexture);
+                        else if (sType == SeedType::SEED3) cropTex = isMature ? const_cast<sf::Texture*>(&gs->matureCarrotTexture) : const_cast<sf::Texture*>(&gs->immatureCarrotTexture);
 
                         if (cropTex) {
                             sf::Sprite cropSprite(*cropTex);
-                            // 칸 크기에 맞춰 스케일 조절
-                            cropSprite.setScale({tileWidth / cropTex->getSize().x, tileHeight / cropTex->getSize().y});
+                            float cropScale = 0.6f;
+                            cropSprite.setScale({(tileWidth / cropTex->getSize().x) * cropScale, (tileHeight / cropTex->getSize().y) * cropScale});
+                            
+                            float offsetX = tileWidth * (1.0f - cropScale) / 2.0f;
+                            float offsetY = tileHeight * (1.0f - cropScale) / 2.0f;
+                            
+                            ImGui::SetCursorPos({currentCursorPos.x + offsetX, currentCursorPos.y + offsetY});
                             ImGui::Image(cropSprite);
-                            ImGui::SetCursorPos(currentCursorPos);
+                        }
+
+                        if (!isMature) {
+                            if (gs->wateringCanTexture.getSize().x > 0) {
+                                sf::Sprite wcSprite(gs->wateringCanTexture);
+                                float wcScale = 0.25f; 
+                                wcSprite.setScale({(tileWidth / gs->wateringCanTexture.getSize().x) * wcScale, (tileHeight / gs->wateringCanTexture.getSize().y) * wcScale});
+                                
+                                float wcOffsetX = 5.0f; 
+                                float wcOffsetY = tileHeight - (tileHeight * wcScale) - 5.0f; 
+                                
+                                ImGui::SetCursorPos({currentCursorPos.x + wcOffsetX, currentCursorPos.y + wcOffsetY});
+                                ImGui::Image(wcSprite);
+                                
+                                if (ImGui::IsItemClicked()) {
+                                    // TODO : 물뿌리개 아이콘 클릭 시 작물에 물을 주는 기능 구현.
+                                }
+                            }
+
+                            if (gs->clockTexture.getSize().x > 0) {
+                                sf::Sprite clockSprite(gs->clockTexture);
+                                float clockScale = 0.25f; 
+                                clockSprite.setScale({(tileWidth / gs->clockTexture.getSize().x) * clockScale, (tileHeight / gs->clockTexture.getSize().y) * clockScale});
+                                
+                                float clockOffsetX = tileWidth - (tileWidth * clockScale) - 5.0f; 
+                                float clockOffsetY = tileHeight - (tileHeight * clockScale) - 5.0f; 
+                                
+                                ImGui::SetCursorPos({currentCursorPos.x + clockOffsetX, currentCursorPos.y + clockOffsetY});
+                                ImGui::Image(clockSprite);
+                                
+                                if (ImGui::IsItemClicked()) {
+                                    // TODO : 시계 아이콘 클릭 시 작물의 남은 시간이 나타나는 기능 구현.
+                                }
+                            }
                         }
                     } 
                     else if (tileType == 0 && gs->state.farm.TrapField[r][c] != nullptr) {
@@ -142,12 +192,18 @@ private:
 
                         if (tTex) {
                             sf::Sprite tSprite(*tTex);
-                            // 칸 크기에 맞춰 스케일 조절
-                            tSprite.setScale({tileWidth / tTex->getSize().x, tileHeight / tTex->getSize().y});
+                            float trapScale = 0.8f;
+                            tSprite.setScale({(tileWidth / tTex->getSize().x) * trapScale, (tileHeight / tTex->getSize().y) * trapScale});
+                            
+                            float offsetX = tileWidth * (1.0f - trapScale) / 2.0f;
+                            float offsetY = tileHeight * (1.0f - trapScale) / 2.0f;
+                            
+                            ImGui::SetCursorPos({currentCursorPos.x + offsetX, currentCursorPos.y + offsetY});
                             ImGui::Image(tSprite);
-                            ImGui::SetCursorPos(currentCursorPos);
                         }
                     }
+
+                    ImGui::SetCursorPos(currentCursorPos);
 
                     if (tileType == 1 || tileType == 0) {
                         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
@@ -160,7 +216,7 @@ private:
                                 mgs->targetCol = c;
                                 mgs->wantToPlantSeed = true;
 
-                                // TODO: 브릿지 연동 완료 시 GameData를 사용하도록 수정 필요
+                                // TODO : 작물 심기 임시 코드. 수정 필요.
                                 mgs->state.farm.SeedField[r][c] = new Seed("Test", 0, 0, 0, heldSeed);
                                 mgs->selectedSeed = SeedType::NONE;
                             } 
@@ -170,7 +226,7 @@ private:
                                 mgs->targetCol = c;
                                 mgs->wantToInstallTrap = true;
 
-                                // TODO: 브릿지 연동 완료 시 GameData를 사용하도록 수정 필요
+                                // TODO: 함정 설치 임시 코드. 수정 필요.
                                 mgs->state.farm.TrapField[r][c] = new Trap("Test", 0, 0, 0, std::make_pair(r, c), std::make_pair(0, 0), heldTrap);
                                 mgs->selectedTrap = TrapType::NONE;
                             }
@@ -191,20 +247,8 @@ private:
     void renderItemPreview() {
         if (gs->selectedTrap == TrapType::NONE && gs->selectedSeed == SeedType::NONE) return;
 
-        ImVec2 mousePos = ImGui::GetMousePos();
-        ImGui::SetNextWindowPos({mousePos.x - 40.0f, mousePos.y - 40.0f});
-        ImGui::SetNextWindowBgAlpha(0.0f); 
-
-        ImGuiWindowFlags previewFlags = 
-            ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | 
-            ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | 
-            ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
-
-        ImGui::Begin("ItemPreviewWindow", nullptr, previewFlags);
-
         sf::Texture* tex = nullptr;
         
-        // 아이템 선택 시, 해당 아이템의 텍스처를 지정
         if (gs->selectedTrap != TrapType::NONE) {
             if (gs->selectedTrap == TrapType::ANIMAL1) tex = const_cast<sf::Texture*>(&gs->cowTrapTexture);
             else if (gs->selectedTrap == TrapType::ANIMAL2) tex = const_cast<sf::Texture*>(&gs->pigTrapTexture);
@@ -216,14 +260,41 @@ private:
         }
 
         if (tex && tex->getSize().x > 0) {
-            sf::Sprite previewSprite(*tex);
-            float scaleX = 80.0f / tex->getSize().x;
-            float scaleY = 80.0f / tex->getSize().y;
-            previewSprite.setScale({scaleX, scaleY});
-            previewSprite.setColor(sf::Color(255, 255, 255, 100)); 
-            ImGui::Image(previewSprite);
-        }
+            ImVec2 mousePos = ImGui::GetMousePos();
+            
+            const float previewWidth = 130.0f;
+            const float previewHeight = 110.0f;
 
-        ImGui::End();
+            ImGui::SetNextWindowPos({mousePos.x - (previewWidth / 2.0f), mousePos.y - (previewHeight / 2.0f)});
+            
+            ImGui::PushStyleColor(ImGuiCol_PopupBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+            
+            ImGuiWindowFlags previewFlags = 
+                ImGuiWindowFlags_NoDecoration | 
+                ImGuiWindowFlags_NoInputs | 
+                ImGuiWindowFlags_AlwaysAutoResize | 
+                ImGuiWindowFlags_NoSavedSettings | 
+                ImGuiWindowFlags_NoFocusOnAppearing | 
+                ImGuiWindowFlags_NoNav |
+                ImGuiWindowFlags_Tooltip;
+
+            ImGui::Begin("ItemPreviewWindow", nullptr, previewFlags);
+
+            sf::Sprite previewSprite(*tex);
+            float scaleX = previewWidth / tex->getSize().x;
+            float scaleY = previewHeight / tex->getSize().y;
+            previewSprite.setScale({scaleX, scaleY});
+
+            previewSprite.setColor(sf::Color(255, 255, 255, 100)); 
+            
+            ImGui::Image(previewSprite);
+
+            ImGui::End();
+            
+            ImGui::PopStyleVar(2);
+            ImGui::PopStyleColor();
+        }
     }
 };
