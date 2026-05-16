@@ -201,4 +201,13 @@ void GameState::LoadAllTextures() {
     if (!exitBtnTexture.loadFromFile("assets/image/Exit.png")) {
         std::cerr << "Failed to load Exit.png" << std::endl;
     }
+    if (!shopBgTexture.loadFromFile("assets/image/ShopBg.png")) {
+        std::cerr << "Failed to load ShopBg.png" << std::endl;
+    }
+    if (!stoneTexture.loadFromFile("assets/image/Stone.png")) {
+        std::cerr << "Failed to load Stone.png" << std::endl;
+    }
+    if (!rouletteTexture.loadFromFile("assets/image/Roulette.png")) {
+        std::cerr << "Failed to load Roulette.png" << std::endl;
+    }
 }

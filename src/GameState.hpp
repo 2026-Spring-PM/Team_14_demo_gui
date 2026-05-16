@@ -68,6 +68,7 @@ public:
     sf::Texture mainMenuBgTexture;
     sf::Texture newGameBtnTexture;
     sf::Texture exitBtnTexture;
-
-
+    sf::Texture shopBgTexture;
+    sf::Texture stoneTexture;
+    sf::Texture rouletteTexture;
 };
