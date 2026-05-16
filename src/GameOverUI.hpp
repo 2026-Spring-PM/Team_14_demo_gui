@@ -25,21 +25,40 @@ public:
         ImGui::Text("GAME OVER");
         ImGui::PopStyleColor();
 
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("최종 결과").x) * 0.5f);
+        ImGui::Text("최종 결과");
+
         ImGui::Separator();
         ImGui::Spacing();
         ImGui::Spacing();
 
         char resTxt[64];
-        sprintf(resTxt, "최종 생존 일수 : Day %d", gs->state.farm.Day);
+        sprintf(resTxt, "Day %d (NEW RECORD)", gs->state.farm.Day);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(resTxt).x) * 0.5f);
         ImGui::Text("%s", resTxt);
 
         ImGui::Spacing();
 
         char moneyTxt[64];
-        sprintf(moneyTxt, "남은 소지금 : $%d", gs->state.Money);
+        sprintf(moneyTxt, "돈 : %d$", gs->state.Money);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(moneyTxt).x) * 0.5f);
         ImGui::Text("%s", moneyTxt);
+
+        ImGui::Spacing();
+
+        char trapTxt[128];
+        // TODO: 보유 개수를 관리하는 실제 변수로 수정 
+        sprintf(trapTxt, "함정 : 소 x %d, 돼지 x %d, 말 x %d", 1, 1, 0); 
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(trapTxt).x) * 0.5f);
+        ImGui::Text("%s", trapTxt);
+
+        ImGui::Spacing();
+
+        char seedTxt[128];
+        // TODO: 보유 개수를 관리하는 실제 변수로 수정.
+        sprintf(seedTxt, "씨앗 : 밀 x %d, 감자 x %d, 당근 x %d", 10, 49, 0);
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(seedTxt).x) * 0.5f);
+        ImGui::Text("%s", seedTxt);
 
         ImGui::Spacing();
         ImGui::Spacing();

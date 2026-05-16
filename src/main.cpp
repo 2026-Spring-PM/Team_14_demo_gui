@@ -11,6 +11,7 @@
 #include "PauseUI.hpp"
 #include "NightAlertUI.hpp"
 #include "GameOverUI.hpp"
+#include "DaySettlementUI.hpp"
 
 enum class ScreenState {
     MAIN_MENU,
@@ -18,7 +19,8 @@ enum class ScreenState {
     SHOP,
     PAUSE,
     NIGHT,
-    GAME_OVER
+    GAME_OVER,
+    SETTLEMENT
 };
 
 int main() {
@@ -52,6 +54,7 @@ int main() {
     PauseUI pauseUI(&gs);
     NightAlertUI nightUI(&gs);
     GameOverUI overUI(&gs);
+    DaySettlementUI settlementUI(&gs);
 
     ScreenState currentScreen = ScreenState::MAIN_MENU;
 
@@ -72,6 +75,7 @@ int main() {
                 if (event.key.code == sf::Keyboard::Num4) currentScreen = ScreenState::NIGHT;
                 if (event.key.code == sf::Keyboard::Num5) currentScreen = ScreenState::GAME_OVER;
                 if (event.key.code == sf::Keyboard::Num6) gs.showInv = !gs.showInv;
+                if (event.key.code == sf::Keyboard::Num7) currentScreen = ScreenState::SETTLEMENT;
             }
         }
 
@@ -89,6 +93,7 @@ int main() {
             if (currentScreen == ScreenState::PAUSE) pauseUI.Render();
             if (currentScreen == ScreenState::NIGHT) nightUI.Render();
             if (currentScreen == ScreenState::GAME_OVER) overUI.Render();
+            if (currentScreen == ScreenState::SETTLEMENT) settlementUI.Render();
         }
 
         ImGui::SetNextWindowPos({10, 10});
@@ -100,6 +105,7 @@ int main() {
         ImGui::Text("숫자키 4: 밤 알림 팝업 띄우기");
         ImGui::Text("숫자키 5: 게임오버 팝업 띄우기");
         ImGui::Text("숫자키 6: 하단 인벤토리 전환");
+        ImGui::Text("숫자키 7: 낮 정산 팝업 띄우기");
         ImGui::End();
 
         ImGui::SFML::Render(window);

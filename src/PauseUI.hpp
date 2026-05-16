@@ -10,22 +10,49 @@ public:
 
         auto flgs = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove;
         
-        ImGui::SetNextWindowSize({300, 220});
-        ImGui::SetNextWindowPos({490, 250}); 
+        ImGui::SetNextWindowSize({300, 310});
+        ImGui::SetNextWindowPos({490, 195}); 
 
         ImGui::Begin("PausePopup", nullptr, flgs);
 
-        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("PAUSED").x) * 0.5f);
-        ImGui::Text("PAUSED");
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize("일시 정지").x) * 0.5f);
+        ImGui::Text("일시 정지");
         ImGui::Separator();
         
         ImGui::Spacing();
         ImGui::Spacing();
 
+        char dayTxt[64];
+        sprintf(dayTxt, "Day %d", gs->state.farm.Day);
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(dayTxt).x) * 0.5f);
+        ImGui::Text("%s", dayTxt);
+
+        char bulletTxt[64];
+        sprintf(bulletTxt, "총알 : %d", 4); // TODO: 실제 총알 개수 변수 연동
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(bulletTxt).x) * 0.5f);
+        ImGui::Text("%s", bulletTxt);
+
+        char moneyTxt[64];
+        sprintf(moneyTxt, "돈 : %d$", gs->state.Money);
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(moneyTxt).x) * 0.5f);
+        ImGui::Text("%s", moneyTxt);
+
+        char trapTxt[128];
+        sprintf(trapTxt, "함정 : 소 x 3, 돼지 x 2, 말 x 5"); // TODO: 실제 함정 개수 변수 연동
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(trapTxt).x) * 0.5f);
+        ImGui::Text("%s", trapTxt);
+
+        char seedTxt[128];
+        sprintf(seedTxt, "씨앗 : 밀 x 10, 감자 x 5, 당근 x  49"); // TODO: 실제 씨앗 개수 변수 연동
+        ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(seedTxt).x) * 0.5f);
+        ImGui::Text("%s", seedTxt);
+
+        ImGui::Spacing();
+
         ImVec2 bSz = {280, 50};
 
         if (ImGui::Button("계속하기 (Resume)", bSz)) {
-            // TODO:  일시정지 해제 (gs->isPaused = false;)
+            // TODO:  일시정지 해제 
         }
 
         ImGui::Spacing();
