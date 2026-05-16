@@ -2,6 +2,7 @@
 #include "UIBase.hpp"
 #include <string>
 #include <utility>
+#include <algorithm>
 #include <SFML/Window/Keyboard.hpp>
 
 class MapUI : public UIBase {
@@ -49,6 +50,14 @@ private:
 
         const float tileWidth = 130.0f; 
         const float tileHeight = 110.0f; 
+
+        bool drawDeferredHover = false;
+        ImVec2 deferredRangeMin, deferredRangeMax;
+        
+        bool drawDeferredPreview = false;
+        sf::Texture* deferredPreviewTex = nullptr;
+        ImVec2 deferredPreviewPos;
+        float deferredScaleX, deferredScaleY;
 
         for (int r = 0; r < 5; r++) {
             for (int c = 0; c < 9; c++) {
@@ -104,6 +113,7 @@ private:
 
                 if (tileType == 1 || tileType == 2 || tileType == 0) {
                     ImVec2 currentCursorPos = ImGui::GetCursorPos();
+                    ImVec2 screenPos = ImGui::GetCursorScreenPos(); 
                     
                     sf::Sprite tileSprite;
                     float scaleX = 1.0f;
@@ -203,13 +213,32 @@ private:
                         }
                     }
 
+                    bool canInstall = false;
+                    if (tileType == 1 && gs->selectedSeed != SeedType::NONE && gs->state.farm.SeedField[r][c] == nullptr) {
+                        canInstall = true;
+                    } else if (tileType == 0 && gs->selectedTrap != TrapType::NONE && gs->state.farm.TrapField[r][c] == nullptr) {
+                        canInstall = true;
+                    }
+
+                    if (canInstall) {
+                        ImVec2 p_max = {screenPos.x + tileWidth, screenPos.y + tileHeight};
+                        ImGui::GetWindowDrawList()->AddRect(screenPos, p_max, IM_COL32(0, 255, 0, 255), 0.0f, 0, 3.0f);
+                    }
+
                     ImGui::SetCursorPos(currentCursorPos);
 
                     if (tileType == 1 || tileType == 0) {
-                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-                        if (ImGui::Button("##tile", {tileWidth, tileHeight})) {
-                            GameState* mgs = const_cast<GameState*>(gs);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+                        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+                        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));                        
 
+			bool isClicked = ImGui::Button("##tile", {tileWidth, tileHeight});
+                        bool isHovered = ImGui::IsItemHovered();
+                        ImGui::PopStyleColor(3);
+
+                        GameState* mgs = const_cast<GameState*>(gs);
+
+                        if (isClicked) {
                             if (tileType == 1 && mgs->selectedSeed != SeedType::NONE && mgs->state.farm.SeedField[r][c] == nullptr) {
                                 SeedType heldSeed = mgs->selectedSeed;
                                 mgs->targetRow = r;
@@ -231,7 +260,34 @@ private:
                                 mgs->selectedTrap = TrapType::NONE;
                             }
                         }
-                        ImGui::PopStyleColor();
+
+                        if (isHovered && tileType == 0) {
+                            if ((mgs->selectedTrap != TrapType::NONE && mgs->state.farm.TrapField[r][c] == nullptr) || 
+                                (mgs->state.farm.TrapField[r][c] != nullptr)) {
+                                
+                                drawDeferredHover = true;
+				//TODO : 임시 범위 설정. 수정 필요.
+                                deferredRangeMin = {screenPos.x - tileWidth, screenPos.y};
+                                deferredRangeMax = {screenPos.x + (tileWidth * 2.0f), screenPos.y + (tileHeight * 2.0f)};
+                            }
+
+                            if (mgs->selectedTrap != TrapType::NONE && mgs->state.farm.TrapField[r][c] == nullptr) {
+                                if (mgs->selectedTrap == TrapType::ANIMAL1) deferredPreviewTex = const_cast<sf::Texture*>(&gs->cowTrapTexture);
+                                else if (mgs->selectedTrap == TrapType::ANIMAL2) deferredPreviewTex = const_cast<sf::Texture*>(&gs->pigTrapTexture);
+                                else if (mgs->selectedTrap == TrapType::ANIMAL3) deferredPreviewTex = const_cast<sf::Texture*>(&gs->horseTrapTexture);
+
+                                if (deferredPreviewTex) {
+                                    drawDeferredPreview = true;
+                                    float pScale = 0.8f;
+                                    float pOffX = tileWidth * (1.0f - pScale) / 2.0f;
+                                    float pOffY = tileHeight * (1.0f - pScale) / 2.0f;
+                                    
+                                    deferredPreviewPos = {screenPos.x + pOffX, screenPos.y + pOffY};
+                                    deferredScaleX = (tileWidth / deferredPreviewTex->getSize().x) * pScale;
+                                    deferredScaleY = (tileHeight / deferredPreviewTex->getSize().y) * pScale;
+                                }
+                            }
+                        }
                     } else if (tileType == 2) {
                         ImGui::Dummy({tileWidth, tileHeight});
                     }
@@ -241,6 +297,22 @@ private:
 
                 if (c < 8) ImGui::SameLine();
             }
+        }
+
+        if (drawDeferredHover) {
+            ImGui::GetWindowDrawList()->AddRect(deferredRangeMin, deferredRangeMax, IM_COL32(255, 0, 0, 255), 0.0f, 0, 3.0f);
+        }
+
+        if (drawDeferredPreview && deferredPreviewTex) {
+            ImVec2 backupCursor = ImGui::GetCursorScreenPos();
+            
+            ImGui::SetCursorScreenPos(deferredPreviewPos);
+            sf::Sprite pSprite(*deferredPreviewTex);
+            pSprite.setScale({deferredScaleX, deferredScaleY});
+            pSprite.setColor(sf::Color(255, 255, 255, 150)); 
+            ImGui::Image(pSprite);
+            
+            ImGui::SetCursorScreenPos(backupCursor);
         }
     }
 
