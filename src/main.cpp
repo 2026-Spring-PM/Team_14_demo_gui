@@ -12,6 +12,15 @@
 #include "NightAlertUI.hpp"
 #include "GameOverUI.hpp"
 
+enum class ScreenState {
+    MAIN_MENU,
+    MAP,
+    SHOP,
+    PAUSE,
+    NIGHT,
+    GAME_OVER
+};
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Team14 Game");
     window.setFramerateLimit(60); 
@@ -44,10 +53,7 @@ int main() {
     NightAlertUI nightUI(&gs);
     GameOverUI overUI(&gs);
 
-    bool testShop = false;
-    bool testPause = false;
-    bool testNight = false;
-    bool testOver = false;
+    ScreenState currentScreen = ScreenState::MAIN_MENU;
 
     sf::Clock clock;
     while (window.isOpen()) {
@@ -59,33 +65,41 @@ int main() {
                 window.close();
 
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Num1) testShop = !testShop;
-                if (event.key.code == sf::Keyboard::Num2) testPause = !testPause;
-                if (event.key.code == sf::Keyboard::Num3) testNight = !testNight;
-                if (event.key.code == sf::Keyboard::Num4) testOver = !testOver;
-                if (event.key.code == sf::Keyboard::Num5) gs.showInv = !gs.showInv;
+                if (event.key.code == sf::Keyboard::Num0) currentScreen = ScreenState::MAIN_MENU;
+                if (event.key.code == sf::Keyboard::Num1) currentScreen = ScreenState::MAP;
+                if (event.key.code == sf::Keyboard::Num2) currentScreen = ScreenState::SHOP;
+                if (event.key.code == sf::Keyboard::Num3) currentScreen = ScreenState::PAUSE;
+                if (event.key.code == sf::Keyboard::Num4) currentScreen = ScreenState::NIGHT;
+                if (event.key.code == sf::Keyboard::Num5) currentScreen = ScreenState::GAME_OVER;
+                if (event.key.code == sf::Keyboard::Num6) gs.showInv = !gs.showInv;
             }
         }
 
         ImGui::SFML::Update(window, clock.restart());
-
         window.clear(sf::Color(45, 45, 45));
 
-        mapUI.Render();
-        bUI.Render();
+        if (currentScreen == ScreenState::MAIN_MENU) {
+            mUI.Render();
+        } 
+        else {
+            mapUI.Render();
+            bUI.Render();
 
-        if (testShop) shopUI.Render();
-        if (testPause) pauseUI.Render();
-        if (testNight) nightUI.Render();
-        if (testOver) overUI.Render();
+            if (currentScreen == ScreenState::SHOP) shopUI.Render();
+            if (currentScreen == ScreenState::PAUSE) pauseUI.Render();
+            if (currentScreen == ScreenState::NIGHT) nightUI.Render();
+            if (currentScreen == ScreenState::GAME_OVER) overUI.Render();
+        }
 
         ImGui::SetNextWindowPos({10, 10});
         ImGui::Begin("Test Guide", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize);
-        ImGui::Text("숫자키 1: 상점 창 켜기/끄기");
-        ImGui::Text("숫자키 2: 일시정지 창 켜기/끄기");
-        ImGui::Text("숫자키 3: 밤 알림 창 켜기/끄기");
-        ImGui::Text("숫자키 4: 게임오버 창 켜기/끄기");
-        ImGui::Text("숫자키 5: 하단 인벤토리 전환");
+        ImGui::Text("숫자키 0: 메인 메뉴로");
+        ImGui::Text("숫자키 1: 기본 게임 화면 (Map)");
+        ImGui::Text("숫자키 2: 상점 팝업 띄우기");
+        ImGui::Text("숫자키 3: 일시정지 팝업 띄우기");
+        ImGui::Text("숫자키 4: 밤 알림 팝업 띄우기");
+        ImGui::Text("숫자키 5: 게임오버 팝업 띄우기");
+        ImGui::Text("숫자키 6: 하단 인벤토리 전환");
         ImGui::End();
 
         ImGui::SFML::Render(window);
@@ -93,7 +107,7 @@ int main() {
     }
 
     ImGui::SFML::Shutdown();
-   
+    
     std::cout << "UI Test Finished!" << std::endl;
     return 0;
 }

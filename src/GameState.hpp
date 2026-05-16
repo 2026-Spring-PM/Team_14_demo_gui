@@ -65,4 +65,9 @@ public:
     sf::Texture matureRiceTexture;
     sf::Texture maturePotatoTexture;
     sf::Texture matureCarrotTexture;
+    sf::Texture mainMenuBgTexture;
+    sf::Texture newGameBtnTexture;
+    sf::Texture exitBtnTexture;
+
+
 };

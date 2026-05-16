@@ -64,9 +64,10 @@ private:
 
         char sTxt[32];
         sprintf(sTxt, "재생속도(%dx)", gs->PlaybackSpeed);
-        if (ImGui::Button(sTxt, {100, 40})) {
+        if (ImGui::Button(sTxt, {130, 40})) { 
             // TODO: 배속 변경 
         }
+        
 
         ImGui::SameLine(500); 
         ImGui::Text("Day %d | %02d:%02d", gs->state.farm.Day, gs->state.farm.Hour, gs->state.farm.Minute);

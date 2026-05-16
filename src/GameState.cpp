@@ -192,4 +192,13 @@ void GameState::LoadAllTextures() {
     if (!clockTexture.loadFromFile("assets/image/Clock.png")) {
         std::cerr << "Failed to load Clock.png" << std::endl;
     }
+    if (!mainMenuBgTexture.loadFromFile("assets/image/MainMenuBg.png")) {
+        std::cerr << "Failed to load MainMenuBg.png" << std::endl;
+    }
+    if (!newGameBtnTexture.loadFromFile("assets/image/NewGame.png")) {
+        std::cerr << "Failed to load NewGame.png" << std::endl;
+    }
+    if (!exitBtnTexture.loadFromFile("assets/image/Exit.png")) {
+        std::cerr << "Failed to load Exit.png" << std::endl;
+    }
 }
