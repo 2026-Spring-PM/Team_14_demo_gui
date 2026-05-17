@@ -6,6 +6,16 @@ enum class State {
     DEAD
 };
 
+enum class Status {
+    MAIN,
+    AM,
+    PM,
+    PAUSE,
+    SHOP,
+    GAMEOVER,
+    SETTLEMENT
+};
+
 enum class SeedType {
     NONE,
     SEED1,
@@ -34,13 +44,4 @@ enum class EnemyType {
     ENEMY1,
     ENEMY2,
     // TODO: 이후 추가
-};
-
-enum class Status {
-    AM,
-    PM,
-    PAUSE,
-    SHOP,
-    GAMEOVER,
-    MAIN
 };

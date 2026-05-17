@@ -47,7 +47,7 @@ private:
         ImGui::SetCursorPos({cur.x, cur.y - 10.0f});
         ImGui::Image(slingshotSprite);
         
-        ImGui::SameLine(); 
+        ImGui::SameLine();
         ImGui::SetCursorPos({ImGui::GetCursorPosX(), cur.y + 10.0f}); 
         ImGui::Text("x%d", gs->state.inventory.Bullets); 
 
@@ -64,8 +64,8 @@ private:
 
         char sTxt[32];
         sprintf(sTxt, "재생속도(%dx)", gs->PlaybackSpeed);
-        if (ImGui::Button(sTxt, {130, 40})) { 
-            // TODO: 배속 변경 
+        if (ImGui::Button(sTxt, {130, 40})) {
+            // TODO : 재생속도 변경
         }
         
 

@@ -13,16 +13,6 @@
 #include "GameOverUI.hpp"
 #include "DaySettlementUI.hpp"
 
-enum class ScreenState {
-    MAIN_MENU,
-    MAP,
-    SHOP,
-    PAUSE,
-    NIGHT,
-    GAME_OVER,
-    SETTLEMENT
-};
-
 int main() {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Team14 Game");
     window.setFramerateLimit(60); 
@@ -34,7 +24,7 @@ int main() {
     ImGui::SFML::UpdateFontTexture();
 
     GameState gs;
-    gs.status = Status::AM; 
+    gs.status = Status::MAIN;
     gs.showInv = false;
 
     gs.LoadAllTextures();
@@ -56,8 +46,6 @@ int main() {
     GameOverUI overUI(&gs);
     DaySettlementUI settlementUI(&gs);
 
-    ScreenState currentScreen = ScreenState::MAIN_MENU;
-
     sf::Clock clock;
     sf::Clock deltaClock; 
 
@@ -72,21 +60,21 @@ int main() {
                 window.close();
 
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Num0) currentScreen = ScreenState::MAIN_MENU;
+                if (event.key.code == sf::Keyboard::Num0) gs.status = Status::MAIN;
                 if (event.key.code == sf::Keyboard::Num1) {
-                    gs.state.farm.Hour = 12;
-                    currentScreen = ScreenState::MAP;
+                    gs.state.farm.Hour = 8;
+                    gs.status = Status::AM;
                 }
                 if (event.key.code == sf::Keyboard::Num2) {
                     gs.state.farm.Hour = 20;
-                    currentScreen = ScreenState::MAP;
+                    gs.status = Status::PM;
                 }
-                if (event.key.code == sf::Keyboard::Num3) currentScreen = ScreenState::SHOP;
-                if (event.key.code == sf::Keyboard::Num4) currentScreen = ScreenState::PAUSE;
-                if (event.key.code == sf::Keyboard::Num5) currentScreen = ScreenState::NIGHT;
-                if (event.key.code == sf::Keyboard::Num6) currentScreen = ScreenState::GAME_OVER;
+                if (event.key.code == sf::Keyboard::Num3) gs.status = Status::SHOP;
+                if (event.key.code == sf::Keyboard::Num4) gs.status = Status::PAUSE;
+                if (event.key.code == sf::Keyboard::Num5) gs.status = Status::PM;
+                if (event.key.code == sf::Keyboard::Num6) gs.status = Status::GAMEOVER;
                 if (event.key.code == sf::Keyboard::Num7) gs.showInv = !gs.showInv;
-                if (event.key.code == sf::Keyboard::Num8) currentScreen = ScreenState::SETTLEMENT;
+                if (event.key.code == sf::Keyboard::Num8) gs.status = Status::SETTLEMENT;
                 
                 if (event.key.code == sf::Keyboard::Num9) {
                     gs.ActiveEnemies.push_back(Enemy(0.5f, 8.0f, EnemyType::NONE, 0, 100));
@@ -101,18 +89,18 @@ int main() {
         ImGui::SFML::Update(window, clock.restart());
         window.clear(sf::Color(45, 45, 45));
 
-        if (currentScreen == ScreenState::MAIN_MENU) {
+        if (gs.status == Status::MAIN) {
             mUI.Render();
         } 
         else {
             mapUI.Render();
             bUI.Render();
 
-            if (currentScreen == ScreenState::SHOP) shopUI.Render();
-            if (currentScreen == ScreenState::PAUSE) pauseUI.Render();
-            if (currentScreen == ScreenState::NIGHT) nightUI.Render();
-            if (currentScreen == ScreenState::GAME_OVER) overUI.Render();
-            if (currentScreen == ScreenState::SETTLEMENT) settlementUI.Render();
+            if (gs.status == Status::SHOP) shopUI.Render();
+            if (gs.status == Status::PAUSE) pauseUI.Render();
+            if (gs.status == Status::PM) nightUI.Render();
+            if (gs.status == Status::GAMEOVER) overUI.Render();
+            if (gs.status == Status::SETTLEMENT) settlementUI.Render();
         }
 
         ImGui::SetNextWindowPos({10, 10});
