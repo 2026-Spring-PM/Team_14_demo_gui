@@ -59,7 +59,11 @@ int main() {
     ScreenState currentScreen = ScreenState::MAIN_MENU;
 
     sf::Clock clock;
+    sf::Clock deltaClock; 
+
     while (window.isOpen()) {
+        float deltaTime = deltaClock.restart().asSeconds();
+
         sf::Event event;
         while (window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(window, event);
@@ -83,7 +87,15 @@ int main() {
                 if (event.key.code == sf::Keyboard::Num6) currentScreen = ScreenState::GAME_OVER;
                 if (event.key.code == sf::Keyboard::Num7) gs.showInv = !gs.showInv;
                 if (event.key.code == sf::Keyboard::Num8) currentScreen = ScreenState::SETTLEMENT;
+                
+                if (event.key.code == sf::Keyboard::Num9) {
+                    gs.ActiveEnemies.push_back(Enemy(0.5f, 8.0f, EnemyType::NONE, 0, 100));
+                }
             }
+        }
+
+        for (auto& enemy : gs.ActiveEnemies) {
+            enemy.Move(deltaTime);
         }
 
         ImGui::SFML::Update(window, clock.restart());
@@ -114,6 +126,7 @@ int main() {
         ImGui::Text("숫자키 6: 게임오버 팝업 띄우기");
         ImGui::Text("숫자키 7: 하단 인벤토리 전환");
         ImGui::Text("숫자키 8: 낮 정산 팝업 띄우기");
+        ImGui::Text("숫자키 9: 도둑 소환 (오른쪽 도로)");
         ImGui::End();
 
         ImGui::SFML::Render(window);

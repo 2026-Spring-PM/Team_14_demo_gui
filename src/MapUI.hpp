@@ -15,10 +15,8 @@ public:
         ImGui::SetNextWindowSize({1280, 620});
         ImGui::SetNextWindowPos({0, 0});
 
-        // 현재 시간을 기준으로 낮/밤 판별
         bool isNight = (gs->state.farm.Hour >= 18 || gs->state.farm.Hour < 6);
         
-        // 낮이면 흰색, 밤이면 어두운 남색으로 배경색 설정
         ImVec4 bgCol = isNight ? ImVec4(0.15f, 0.15f, 0.22f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
         
         ImGui::PushStyleColor(ImGuiCol_WindowBg, bgCol);
@@ -62,13 +60,16 @@ private:
         ImVec2 deferredPreviewPos;
         float deferredScaleX, deferredScaleY;
 
+        ImVec2 gridStartPos = ImGui::GetCursorScreenPos();
+        float spacingX = ImGui::GetStyle().ItemSpacing.x;
+        float spacingY = ImGui::GetStyle().ItemSpacing.y;
+
         for (int r = 0; r < 5; r++) {
             for (int c = 0; c < 9; c++) {
                 int tileType = layout[r][c]; 
 
                 if (tileType == 7) {
                     if (c == 0) { 
-                        float spacingX = ImGui::GetStyle().ItemSpacing.x; 
                         float mergedWidth = (tileWidth * 3.0f) + (spacingX * 2.0f); 
                         
                         ImGui::PushID(r * 9 + c); 
@@ -300,6 +301,44 @@ private:
 
                 if (c < 8) ImGui::SameLine();
             }
+        }
+
+        ImDrawList* drawList = ImGui::GetWindowDrawList();
+        GameState* mgs = const_cast<GameState*>(gs);
+
+        for (const auto& enemy : mgs->ActiveEnemies) {
+            if (enemy.EnemyState != State::ALIVE) continue; 
+
+            float posX = gridStartPos.x + enemy.Pos * (tileWidth + spacingX);
+            float posY = gridStartPos.y + 2.0f * (tileHeight + spacingY);
+
+            if (mgs->thiefTexture.getSize().x > 0) {
+                float scale = 0.5f; 
+                float tw = mgs->thiefTexture.getSize().x;
+                float th = mgs->thiefTexture.getSize().y;
+                float renderW = tileWidth * scale;
+                float renderH = (renderW / tw) * th; 
+                float offX = (tileWidth - renderW) / 2.0f;
+                float offY = (tileHeight - renderH) / 2.0f;
+
+                drawList->AddImage(
+                    (void*)(intptr_t)mgs->thiefTexture.getNativeHandle(),
+                    ImVec2(posX + offX, posY + offY),
+                    ImVec2(posX + offX + renderW, posY + offY + renderH)
+                );
+            }
+
+            float hpWidth = 80.0f;
+            float hpHeight = 10.0f;
+            float hpX = posX + (tileWidth - hpWidth) / 2.0f;
+            float hpY = posY + 2.0f; 
+
+            drawList->AddRectFilled(ImVec2(hpX, hpY), ImVec2(hpX + hpWidth, hpY + hpHeight), IM_COL32(50, 50, 50, 255)); 
+            
+            float currentHpWidth = hpWidth * ((float)enemy.HP / enemy.MaxHP);
+            drawList->AddRectFilled(ImVec2(hpX, hpY), ImVec2(hpX + currentHpWidth, hpY + hpHeight), IM_COL32(220, 20, 20, 255)); 
+            
+            drawList->AddRect(ImVec2(hpX, hpY), ImVec2(hpX + hpWidth, hpY + hpHeight), IM_COL32(0, 0, 0, 255)); 
         }
 
         if (drawDeferredHover) {

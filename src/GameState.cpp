@@ -58,7 +58,7 @@ void GameState::Update() {
                 it = ActiveEnemies.erase(it);
             }
             else if (it->EnemyState == State::ALIVE){
-                it->Move();
+                it->Move(0.016f);
 
                 if (it->Pos >= 100) { // TODO: UI 및 향후 구현에 따른 100이라는 숫자 조정
                     if (!state.TakeDamage()) {
@@ -110,7 +110,7 @@ void GameState::TransitionToNight() {
         int cooldown;
         int hp;
 
-        Enemy newEnemy(speed, type, cooldown, hp);
+        Enemy newEnemy(static_cast<float>(speed), 8.0f, type, cooldown, hp);
         newEnemy.SpawnDelay = SpawnDelay(night);
         PendingEnemies.push_back(newEnemy);
     }

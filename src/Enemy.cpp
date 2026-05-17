@@ -10,8 +10,9 @@ void Enemy::Move(float deltaTime) {
     
     Pos -= Speed * deltaTime; 
 
-    if (Pos < 3.0f) {
-        Pos = 3.0f;
+    if (Pos < 0.0f) {
+        Pos = 0.0f;
+	// TODO: 도둑이 집까지 도착. 총알 -1.
     }
 }
 
