@@ -71,4 +71,5 @@ public:
     sf::Texture shopBgTexture;
     sf::Texture stoneTexture;
     sf::Texture rouletteTexture;
+    sf::Texture thiefTexture;
 };

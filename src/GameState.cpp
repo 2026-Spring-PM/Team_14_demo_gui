@@ -210,4 +210,7 @@ void GameState::LoadAllTextures() {
     if (!rouletteTexture.loadFromFile("assets/image/Roulette.png")) {
         std::cerr << "Failed to load Roulette.png" << std::endl;
     }
+    if (!thiefTexture.loadFromFile("assets/image/Theif.png")) {
+	std::cerr << "Failed to load Theif.png" << std::endl;
+    }
 }

@@ -15,7 +15,10 @@ public:
         ImGui::SetNextWindowSize({1280, 620});
         ImGui::SetNextWindowPos({0, 0});
 
+        // 현재 시간을 기준으로 낮/밤 판별
         bool isNight = (gs->state.farm.Hour >= 18 || gs->state.farm.Hour < 6);
+        
+        // 낮이면 흰색, 밤이면 어두운 남색으로 배경색 설정
         ImVec4 bgCol = isNight ? ImVec4(0.15f, 0.15f, 0.22f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
         
         ImGui::PushStyleColor(ImGuiCol_WindowBg, bgCol);
@@ -228,11 +231,11 @@ private:
                     ImGui::SetCursorPos(currentCursorPos);
 
                     if (tileType == 1 || tileType == 0) {
-			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
                         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
                         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));                        
 
-			bool isClicked = ImGui::Button("##tile", {tileWidth, tileHeight});
+                        bool isClicked = ImGui::Button("##tile", {tileWidth, tileHeight});
                         bool isHovered = ImGui::IsItemHovered();
                         ImGui::PopStyleColor(3);
 
@@ -266,7 +269,7 @@ private:
                                 (mgs->state.farm.TrapField[r][c] != nullptr)) {
                                 
                                 drawDeferredHover = true;
-				//TODO : 임시 범위 설정. 수정 필요.
+                                //TODO : 임시 범위 설정. 수정 필요.
                                 deferredRangeMin = {screenPos.x - tileWidth, screenPos.y};
                                 deferredRangeMax = {screenPos.x + (tileWidth * 2.0f), screenPos.y + (tileHeight * 2.0f)};
                             }

@@ -1,13 +1,18 @@
 #include "Enemy.hpp"
 
-Enemy::Enemy() : Speed(0), Pos(0), CoolDown(0), Timer(0), HP(0), SpawnDelay(0), Ability(EnemyType::NONE), EnemyState(State::NONE) {}
+Enemy::Enemy() : Speed(0.0f), Pos(0.0f), CoolDown(0), Timer(0), HP(0), MaxHP(0), SpawnDelay(0), Ability(EnemyType::NONE), EnemyState(State::NONE) {}
 
-Enemy::Enemy(int speed, EnemyType ability, int cooldown, int hp)
-    : Speed(speed), Pos(0), CoolDown(cooldown), Timer(0), HP(hp), SpawnDelay(0), Ability(ability), EnemyState(State::ALIVE) {}
+Enemy::Enemy(float speed, float startPos, EnemyType ability, int cooldown, int hp)
+    : Speed(speed), Pos(startPos), CoolDown(cooldown), Timer(0), HP(hp), MaxHP(hp), SpawnDelay(0), Ability(ability), EnemyState(State::ALIVE) {}
 
-void Enemy::Move() {
+void Enemy::Move(float deltaTime) {
     if (EnemyState != State::ALIVE) return;
-    Pos += Speed;
+    
+    Pos -= Speed * deltaTime; 
+
+    if (Pos < 3.0f) {
+        Pos = 3.0f;
+    }
 }
 
 void Enemy::TakeDamage(int damage) {

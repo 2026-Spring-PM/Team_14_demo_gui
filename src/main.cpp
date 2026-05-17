@@ -69,13 +69,20 @@ int main() {
 
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Num0) currentScreen = ScreenState::MAIN_MENU;
-                if (event.key.code == sf::Keyboard::Num1) currentScreen = ScreenState::MAP;
-                if (event.key.code == sf::Keyboard::Num2) currentScreen = ScreenState::SHOP;
-                if (event.key.code == sf::Keyboard::Num3) currentScreen = ScreenState::PAUSE;
-                if (event.key.code == sf::Keyboard::Num4) currentScreen = ScreenState::NIGHT;
-                if (event.key.code == sf::Keyboard::Num5) currentScreen = ScreenState::GAME_OVER;
-                if (event.key.code == sf::Keyboard::Num6) gs.showInv = !gs.showInv;
-                if (event.key.code == sf::Keyboard::Num7) currentScreen = ScreenState::SETTLEMENT;
+                if (event.key.code == sf::Keyboard::Num1) {
+                    gs.state.farm.Hour = 12;
+                    currentScreen = ScreenState::MAP;
+                }
+                if (event.key.code == sf::Keyboard::Num2) {
+                    gs.state.farm.Hour = 20;
+                    currentScreen = ScreenState::MAP;
+                }
+                if (event.key.code == sf::Keyboard::Num3) currentScreen = ScreenState::SHOP;
+                if (event.key.code == sf::Keyboard::Num4) currentScreen = ScreenState::PAUSE;
+                if (event.key.code == sf::Keyboard::Num5) currentScreen = ScreenState::NIGHT;
+                if (event.key.code == sf::Keyboard::Num6) currentScreen = ScreenState::GAME_OVER;
+                if (event.key.code == sf::Keyboard::Num7) gs.showInv = !gs.showInv;
+                if (event.key.code == sf::Keyboard::Num8) currentScreen = ScreenState::SETTLEMENT;
             }
         }
 
@@ -99,13 +106,14 @@ int main() {
         ImGui::SetNextWindowPos({10, 10});
         ImGui::Begin("Test Guide", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::Text("숫자키 0: 메인 메뉴로");
-        ImGui::Text("숫자키 1: 기본 게임 화면 (Map)");
-        ImGui::Text("숫자키 2: 상점 팝업 띄우기");
-        ImGui::Text("숫자키 3: 일시정지 팝업 띄우기");
-        ImGui::Text("숫자키 4: 밤 알림 팝업 띄우기");
-        ImGui::Text("숫자키 5: 게임오버 팝업 띄우기");
-        ImGui::Text("숫자키 6: 하단 인벤토리 전환");
-        ImGui::Text("숫자키 7: 낮 정산 팝업 띄우기");
+        ImGui::Text("숫자키 1: 기본 게임 화면 (낮 Map)");
+        ImGui::Text("숫자키 2: 기본 게임 화면 (밤 Map)");
+        ImGui::Text("숫자키 3: 상점 팝업 띄우기");
+        ImGui::Text("숫자키 4: 일시정지 팝업 띄우기");
+        ImGui::Text("숫자키 5: 밤 알림 팝업 띄우기");
+        ImGui::Text("숫자키 6: 게임오버 팝업 띄우기");
+        ImGui::Text("숫자키 7: 하단 인벤토리 전환");
+        ImGui::Text("숫자키 8: 낮 정산 팝업 띄우기");
         ImGui::End();
 
         ImGui::SFML::Render(window);
