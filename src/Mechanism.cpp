@@ -15,15 +15,15 @@ EnemyType EnemyTypeSet(int level) {
 }
 
 int EnemySpeed(int level, EnemyType type) {
-    return 1111;
+    return 1111; // TODO
 }
 
 int EnemyCoolDown(int level, EnemyType type) {
-    return 1111;
+    return 1111; // TODO
 }
 
 int EnemyHealthPoint(int level, EnemyType type) {
-    return 1111;
+    return 1111; // TODO
 }
 
 int SpawnDelay(NightType type) {

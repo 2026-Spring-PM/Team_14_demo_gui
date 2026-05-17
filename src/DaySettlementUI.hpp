@@ -8,7 +8,7 @@ public:
     void Render() override {
         // TODO: 밤이 끝나고 낮으로 전환될 때 자동으로 호출
 
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.15f, 0.3f, 0.95f));
+	    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.15f, 0.3f, 0.95f));
 
         auto flgs = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove;
         
