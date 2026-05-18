@@ -34,8 +34,6 @@ public:
 
     void TriggerDayRandomEvent();
     void TriggerNightRandomEvent();
-
-    void RenderFarm();
 };
 
 Farm::Farm() : Day(1), Hour(6), Minute(0), IsDrought(false), IsPest(false) {
@@ -133,8 +131,4 @@ void Farm::TriggerNightRandomEvent() {
             }
         }
     }
-}
-
-void Farm::RenderFarm() {
-    
 }

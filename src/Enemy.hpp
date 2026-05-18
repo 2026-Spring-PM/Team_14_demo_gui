@@ -36,8 +36,4 @@ public:
             EnemyState = State::DEAD;
         }
     }
-
-    void Render() {
-        // TODO : UI 렌더링 함수
-    }
 };

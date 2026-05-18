@@ -24,8 +24,6 @@ public:
     void Breakdown();
     void FeedSeed();
     bool InRange(Enemy& enemy);
-
-    void Render();
 };
 
 Trap::Trap() : Name(""), Price(0), Atk(0), CoolDown(0), Timer(0), Pos({0, 0}), Range({0,0}), Type(TrapType::NONE), TrapState(State::NONE) {}
@@ -54,8 +52,4 @@ void Trap::FeedSeed() {
 bool Trap::InRange(Enemy& enemy) {
     // TODO: UI 구현후, 구현된 화면에 따라 범위에 들어오는 것을 체크
     return true;
-}
-
-void Trap::Render() {
-    // TODO
 }

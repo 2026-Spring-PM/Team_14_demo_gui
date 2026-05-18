@@ -21,8 +21,6 @@ public:
     void UpdateTimer();
     void IsDead();
     bool IsGrown() const;
-
-    void Render();
 };
 
 Seed::Seed() : Name(""), Price(0), Value(0), CoolDown(0), Timer(0), Humid(100), HumidTimer(0), Type(SeedType::NONE), FieldState(State::NONE) {}
@@ -48,8 +46,4 @@ void Seed::IsDead() {
 
 bool Seed::IsGrown() const {
     return Timer >= CoolDown;
-}
-
-void Seed::Render() {
-    // TODO : 현재 Field State에 따라 렌더링 구현
 }
