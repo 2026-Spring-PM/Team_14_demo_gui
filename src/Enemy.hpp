@@ -16,7 +16,7 @@ public:
     Enemy();
     Enemy(float speed, float startPos, EnemyType ability, int cooldown, int hp);
 
-    void Move(float deltaTime);
+    bool Move(float deltaTime);
     void TakeDamage(int damage);
 };
 
@@ -26,15 +26,17 @@ Enemy::Enemy()
 Enemy::Enemy(float speed, float startPos, EnemyType ability, int cooldown, int hp)
 : Speed(speed), Pos(startPos), CoolDown(cooldown), Timer(0), HP(hp), MaxHP(hp), SpawnDelay(0), Ability(ability), EnemyState(State::ALIVE) {};
 
-void Enemy::Move(float deltaTime) {
-    if (EnemyState != State::ALIVE) return;
+bool Enemy::Move(float deltaTime) {
+    if (EnemyState != State::ALIVE) return false;
     
     Pos -= Speed * deltaTime; 
 
-    if (Pos < 0.0f) {
-        Pos = 0.0f;
-        // TODO: 도둑이 집까지 도착 시. 총알 -1.
+    if (Pos <= 0) {
+        Pos = 0;
+        return true;
     }
+    
+    return false;
 }
 
 void Enemy::TakeDamage(int damage) {

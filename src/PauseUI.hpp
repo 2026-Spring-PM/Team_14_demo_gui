@@ -23,7 +23,7 @@ public:
         ImGui::Spacing();
 
         char dayTxt[64];
-        sprintf(dayTxt, "Day %d", gs->state.farm.Day);
+        sprintf(dayTxt, "Day %d", gs->farm.Day);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(dayTxt).x) * 0.5f);
         ImGui::Text("%s", dayTxt);
 
@@ -33,7 +33,7 @@ public:
         ImGui::Text("%s", bulletTxt);
 
         char moneyTxt[64];
-        sprintf(moneyTxt, "돈 : %d$", gs->state.Money);
+        sprintf(moneyTxt, "돈 : %d$", gs->Money);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(moneyTxt).x) * 0.5f);
         ImGui::Text("%s", moneyTxt);
 

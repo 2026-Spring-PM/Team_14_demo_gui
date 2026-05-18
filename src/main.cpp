@@ -29,13 +29,13 @@ int main() {
 
     gs.LoadAllTextures();
 
-    gs.state.inventory.SeedCount[SeedType::SEED1] = 10; 
-    gs.state.inventory.SeedCount[SeedType::SEED2] = 5;  
-    gs.state.inventory.SeedCount[SeedType::SEED3] = 49; 
+    gs.inventory.SeedCount[SeedType::SEED1] = 10; 
+    gs.inventory.SeedCount[SeedType::SEED2] = 5;  
+    gs.inventory.SeedCount[SeedType::SEED3] = 49; 
 
-    gs.state.inventory.TrapCount[TrapType::ANIMAL1] = 3;
-    gs.state.inventory.TrapCount[TrapType::ANIMAL2] = 2;
-    gs.state.inventory.TrapCount[TrapType::ANIMAL3] = 5;
+    gs.inventory.TrapCount[TrapType::ANIMAL1] = 3;
+    gs.inventory.TrapCount[TrapType::ANIMAL2] = 2;
+    gs.inventory.TrapCount[TrapType::ANIMAL3] = 5;
 
     MainUI mUI(&gs);
     BottomUI bUI(&gs);
@@ -62,11 +62,11 @@ int main() {
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Num0) gs.status = Status::MAIN;
                 if (event.key.code == sf::Keyboard::Num1) {
-                    gs.state.farm.Hour = 8;
+                    gs.farm.Hour = 8;
                     gs.status = Status::AM;
                 }
                 if (event.key.code == sf::Keyboard::Num2) {
-                    gs.state.farm.Hour = 20;
+                    gs.farm.Hour = 20;
                     gs.status = Status::PM;
                 }
                 if (event.key.code == sf::Keyboard::Num3) gs.status = Status::SHOP;
@@ -77,12 +77,12 @@ int main() {
                 if (event.key.code == sf::Keyboard::Num8) gs.status = Status::SETTLEMENT;
                 
                 if (event.key.code == sf::Keyboard::Num9) {
-                    gs.ActiveEnemies.push_back(Enemy(0.5f, 8.0f, EnemyType::NONE, 0, 100));
+                    gs.farm.ActiveEnemies.push_back(Enemy(0.5f, 8.0f, EnemyType::NONE, 0, 100));
                 }
             }
         }
 
-        for (auto& enemy : gs.ActiveEnemies) {
+        for (auto& enemy : gs.farm.ActiveEnemies) {
             enemy.Move(deltaTime);
         }
 

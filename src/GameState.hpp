@@ -106,7 +106,7 @@ void GameState::Update() {
             farm.UpdateTraps();
         }
 
-        farm.UpdateEnemies();
+        farm.UpdateEnemies(status, inventory);
         farm.UpdateFarms();
 
         if (farm.EnemiesEmpty()) TransitionToDay();

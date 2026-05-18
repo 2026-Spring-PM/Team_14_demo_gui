@@ -10,7 +10,7 @@ public:
         ImGui::SetNextWindowSize({1280, 100});
         ImGui::SetNextWindowPos({0, 620});
 
-        bool isNight = (gs->state.farm.Hour >= 18 || gs->state.farm.Hour < 6);
+        bool isNight = (gs->farm.Hour >= 18 || gs->farm.Hour < 6);
         ImVec4 bgCol = isNight ? ImVec4(0.15f, 0.15f, 0.22f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
         ImVec4 textCol = isNight ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -49,7 +49,7 @@ private:
         
         ImGui::SameLine();
         ImGui::SetCursorPos({ImGui::GetCursorPosX(), cur.y + 10.0f}); 
-        ImGui::Text("x%d", gs->state.inventory.Bullets); 
+        ImGui::Text("x%d", gs->inventory.Bullets); 
 
         ImGui::SameLine(200); 
         if (gs->status == Status::PM) ImGui::BeginDisabled();
@@ -70,7 +70,7 @@ private:
         
 
         ImGui::SameLine(500); 
-        ImGui::Text("Day %d | %02d:%02d", gs->state.farm.Day, gs->state.farm.Hour, gs->state.farm.Minute);
+        ImGui::Text("Day %d | %02d:%02d", gs->farm.Day, gs->farm.Hour, gs->farm.Minute);
 
         ImGui::SameLine(800); 
         if (ImGui::Button("인벤토리 확인", {150, 40})) {
@@ -78,7 +78,7 @@ private:
         }
 
         ImGui::SameLine(1080); 
-        ImGui::Text("Cash: $%d", gs->state.Money);
+        ImGui::Text("Cash: $%d", gs->Money);
 
         ImGui::EndGroup(); 
     }
@@ -96,7 +96,7 @@ private:
         
         // 1. 씨앗 탭 렌더링
         if (!isTrapTab) {
-            for (auto const& [type, count] : gs->state.inventory.SeedCount) { 
+            for (auto const& [type, count] : gs->inventory.SeedCount) { 
                 if (type == SeedType::NONE) continue;
                 
                 ImGui::PushID((int)type);
@@ -147,7 +147,7 @@ private:
         } 
         // 2. 함정 탭 렌더링
         else {
-            for (auto const& [type, count] : gs->state.inventory.TrapCount) { 
+            for (auto const& [type, count] : gs->inventory.TrapCount) { 
                 if (type == TrapType::NONE) continue;
                 
                 ImGui::PushID((int)type + 100); 

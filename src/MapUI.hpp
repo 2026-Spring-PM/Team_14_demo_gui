@@ -15,7 +15,7 @@ public:
         ImGui::SetNextWindowSize({1280, 620});
         ImGui::SetNextWindowPos({0, 0});
 
-        bool isNight = (gs->state.farm.Hour >= 18 || gs->state.farm.Hour < 6);
+        bool isNight = (gs->farm.Hour >= 18 || gs->farm.Hour < 6);
         
         ImVec4 bgCol = isNight ? ImVec4(0.15f, 0.15f, 0.22f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
         
@@ -140,11 +140,11 @@ private:
                     tileSprite.setScale({scaleX, scaleY});
                     ImGui::Image(tileSprite);
                     
-                    if (tileType == 1 && gs->state.farm.SeedField[r][c] != nullptr) {
-                        SeedType sType = gs->state.farm.SeedField[r][c]->Type;
+                    if (tileType == 1 && gs->farm.SeedField[r][c] != nullptr) {
+                        SeedType sType = gs->farm.SeedField[r][c]->Type;
                         sf::Texture* cropTex = nullptr;
                         
-                        // TODO:임시 코드. 실제 연동 시 gs->state.farm.SeedField[r][c]->IsMature() 등의 판별 필요.
+                        // TODO:임시 코드. 실제 연동 시 gs->farm.SeedField[r][c]->IsMature() 등의 판별 필요.
                         bool isMature = debugMatureToggle; 
                         
                         if (sType == SeedType::SEED1) cropTex = isMature ? const_cast<sf::Texture*>(&gs->matureRiceTexture) : const_cast<sf::Texture*>(&gs->immatureRiceTexture);
@@ -197,8 +197,8 @@ private:
                             }
                         }
                     } 
-                    else if (tileType == 0 && gs->state.farm.TrapField[r][c] != nullptr) {
-                        TrapType tType = gs->state.farm.TrapField[r][c]->Type;
+                    else if (tileType == 0 && gs->farm.TrapField[r][c] != nullptr) {
+                        TrapType tType = gs->farm.TrapField[r][c]->Type;
                         sf::Texture* tTex = nullptr;
                         if (tType == TrapType::ANIMAL1) tTex = const_cast<sf::Texture*>(&gs->cowTrapTexture);
                         else if (tType == TrapType::ANIMAL2) tTex = const_cast<sf::Texture*>(&gs->pigTrapTexture);
@@ -218,9 +218,9 @@ private:
                     }
 
                     bool canInstall = false;
-                    if (tileType == 1 && gs->selectedSeed != SeedType::NONE && gs->state.farm.SeedField[r][c] == nullptr) {
+                    if (tileType == 1 && gs->selectedSeed != SeedType::NONE && gs->farm.SeedField[r][c] == nullptr) {
                         canInstall = true;
-                    } else if (tileType == 0 && gs->selectedTrap != TrapType::NONE && gs->state.farm.TrapField[r][c] == nullptr) {
+                    } else if (tileType == 0 && gs->selectedTrap != TrapType::NONE && gs->farm.TrapField[r][c] == nullptr) {
                         canInstall = true;
                     }
 
@@ -243,31 +243,31 @@ private:
                         GameState* mgs = const_cast<GameState*>(gs);
 
                         if (isClicked) {
-                            if (tileType == 1 && mgs->selectedSeed != SeedType::NONE && mgs->state.farm.SeedField[r][c] == nullptr) {
+                            if (tileType == 1 && mgs->selectedSeed != SeedType::NONE && mgs->farm.SeedField[r][c] == nullptr) {
                                 SeedType heldSeed = mgs->selectedSeed;
                                 mgs->targetRow = r;
                                 mgs->targetCol = c;
                                 mgs->wantToPlantSeed = true;
 
                                 // TODO : 작물 심기 임시 코드. 수정 필요.
-                                mgs->state.farm.SeedField[r][c] = new Seed("Test", 0, 0, 0, heldSeed);
+                                mgs->farm.SeedField[r][c] = new Seed("Test", 0, 0, 0, heldSeed);
                                 mgs->selectedSeed = SeedType::NONE;
                             } 
-                            else if (tileType == 0 && mgs->selectedTrap != TrapType::NONE && mgs->state.farm.TrapField[r][c] == nullptr) {
+                            else if (tileType == 0 && mgs->selectedTrap != TrapType::NONE && mgs->farm.TrapField[r][c] == nullptr) {
                                 TrapType heldTrap = mgs->selectedTrap;
                                 mgs->targetRow = r;
                                 mgs->targetCol = c;
                                 mgs->wantToInstallTrap = true;
 
                                 // TODO: 함정 설치 임시 코드. 수정 필요.
-                                mgs->state.farm.TrapField[r][c] = new Trap("Test", 0, 0, 0, std::make_pair(r, c), std::make_pair(0, 0), heldTrap);
+                                mgs->farm.TrapField[r][c] = new Trap("Test", 0, 0, 0, std::make_pair(r, c), std::make_pair(0, 0), heldTrap);
                                 mgs->selectedTrap = TrapType::NONE;
                             }
                         }
 
                         if (isHovered && tileType == 0) {
-                            if ((mgs->selectedTrap != TrapType::NONE && mgs->state.farm.TrapField[r][c] == nullptr) || 
-                                (mgs->state.farm.TrapField[r][c] != nullptr)) {
+                            if ((mgs->selectedTrap != TrapType::NONE && mgs->farm.TrapField[r][c] == nullptr) || 
+                                (mgs->farm.TrapField[r][c] != nullptr)) {
                                 
                                 drawDeferredHover = true;
                                 //TODO : 임시 범위 설정. 수정 필요.
@@ -275,7 +275,7 @@ private:
                                 deferredRangeMax = {screenPos.x + (tileWidth * 2.0f), screenPos.y + (tileHeight * 2.0f)};
                             }
 
-                            if (mgs->selectedTrap != TrapType::NONE && mgs->state.farm.TrapField[r][c] == nullptr) {
+                            if (mgs->selectedTrap != TrapType::NONE && mgs->farm.TrapField[r][c] == nullptr) {
                                 if (mgs->selectedTrap == TrapType::ANIMAL1) deferredPreviewTex = const_cast<sf::Texture*>(&gs->cowTrapTexture);
                                 else if (mgs->selectedTrap == TrapType::ANIMAL2) deferredPreviewTex = const_cast<sf::Texture*>(&gs->pigTrapTexture);
                                 else if (mgs->selectedTrap == TrapType::ANIMAL3) deferredPreviewTex = const_cast<sf::Texture*>(&gs->horseTrapTexture);
@@ -306,7 +306,7 @@ private:
         ImDrawList* drawList = ImGui::GetWindowDrawList();
         GameState* mgs = const_cast<GameState*>(gs);
 
-        for (const auto& enemy : mgs->ActiveEnemies) {
+        for (const auto& enemy : mgs->farm.ActiveEnemies) {
             if (enemy.EnemyState != State::ALIVE) continue; 
 
             float posX = gridStartPos.x + enemy.Pos * (tileWidth + spacingX);

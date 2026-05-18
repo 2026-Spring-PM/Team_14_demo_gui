@@ -8,6 +8,7 @@
 #include "Mechanism.hpp"
 #include "Enemy.hpp"
 #include "GameData.hpp"
+#include "Inventory.hpp"
 
 class Farm {
 public:
@@ -38,7 +39,7 @@ public:
     void UpdateTraps();
     void UpdateFarms();
     void SpawnEnemies(int NightElapsedMinutes);
-    void UpdateEnemies();
+    void UpdateEnemies(Status &status, Inventory &inventory);
     void AddEnemies(int level, NightType night);
 
     bool EnemiesEmpty();
@@ -172,18 +173,17 @@ void Farm::AddEnemies(int Level, NightType night) {
     }
 }
 
-void Farm::UpdateEnemies() {
+void Farm::UpdateEnemies(Status &status, Inventory &inventory) {
     for (auto it = ActiveEnemies.begin(); it != ActiveEnemies.end();) {
         if (it->EnemyState == State::DEAD) {
             // state.AddMoney(); // 적 사망 시 돈 추가하고 싶으면 코드 추가 -> 이후 업데이트 시 있는 게 좋다면 추가
             it = ActiveEnemies.erase(it);
         }
         else if (it->EnemyState == State::ALIVE){
-            it->Move(0.016f);
-
-            if (it->Pos >= 100) { // TODO: UI에 따라 100이라는 숫자 조정
-                if (!state.TakeDamage()) {
-                    // status = Status::GAMEOVER; // TODO: FIX
+            if (it->Move(0.016f)) {
+                inventory.Bullets--;
+                if (inventory.Bullets < 0) {
+                    status = Status::GAMEOVER;
                     return;
                 }
                 it = ActiveEnemies.erase(it);

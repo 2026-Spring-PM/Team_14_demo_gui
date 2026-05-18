@@ -33,14 +33,14 @@ public:
         ImGui::Spacing();
 
         char resTxt[64];
-        sprintf(resTxt, "Day %d (NEW RECORD)", gs->state.farm.Day);
+        sprintf(resTxt, "Day %d (NEW RECORD)", gs->farm.Day);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(resTxt).x) * 0.5f);
         ImGui::Text("%s", resTxt);
 
         ImGui::Spacing();
 
         char moneyTxt[64];
-        sprintf(moneyTxt, "돈 : %d$", gs->state.Money);
+        sprintf(moneyTxt, "돈 : %d$", gs->Money);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(moneyTxt).x) * 0.5f);
         ImGui::Text("%s", moneyTxt);
 
