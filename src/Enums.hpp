@@ -16,6 +16,13 @@ enum class Status {
     SETTLEMENT
 };
 
+enum class RandomEvent {
+    NONE,
+    DROUGHT,
+    PEST,
+    BOTH
+};
+
 enum class SeedType {
     NONE,
     SEED1,

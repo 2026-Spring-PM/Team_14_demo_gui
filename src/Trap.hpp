@@ -19,26 +19,31 @@ public:
     Trap();
     Trap(std::string name, int price, int atk, int cooldown, std::pair<int, int> Pos, std::pair<int, int> range, TrapType type);
 
+    void Attack(std::vector<Enemy> &ActiveEnemies);
     void UpdateTimer();
-    void Attack(Enemy* enemy);
     void Breakdown();
     void FeedSeed();
     bool InRange(Enemy& enemy);
 };
 
-Trap::Trap() : Name(""), Price(0), Atk(0), CoolDown(0), Timer(0), Pos({0, 0}), Range({0,0}), Type(TrapType::NONE), TrapState(State::NONE) {}
+Trap::Trap()
+: Name(""), Price(0), Atk(0), CoolDown(0), Timer(0), Pos({0, 0}), Range({0,0}), Type(TrapType::NONE), TrapState(State::NONE) {}
 
 Trap::Trap(std::string name, int price, int atk, int cooldown, std::pair<int, int> pos, std::pair<int, int> range, TrapType type)
-    : Name(name), Price(price), Atk(atk), CoolDown(cooldown), Timer(0), Pos(pos), Range(range), Type(type), TrapState(State::ALIVE) {}
+: Name(name), Price(price), Atk(atk), CoolDown(cooldown), Timer(0), Pos(pos), Range(range), Type(type), TrapState(State::ALIVE) {}
+
+void Trap::Attack(std::vector<Enemy> &ActiveEnemies) {
+    UpdateTimer();
+    if (Timer == CoolDown) {
+        for (auto& enemy : ActiveEnemies) {
+            if (InRange(enemy)) enemy.TakeDamage(Atk);
+        }
+        Timer = 0;
+    }
+}
 
 void Trap::UpdateTimer() {
     if (TrapState == State::ALIVE && Timer < CoolDown) Timer++;
-}
-
-void Trap::Attack(Enemy* enemy) {
-    if (TrapState == State::DEAD || Timer < CoolDown) return;
-    enemy->TakeDamage(Atk);
-    Timer = 0;
 }
 
 void Trap::Breakdown() {
