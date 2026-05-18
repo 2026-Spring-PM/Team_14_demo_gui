@@ -17,19 +17,19 @@ EnemyType EnemyTypeSet(int level) {
 }
 
 int EnemySpeed(int level, EnemyType type) {
-    return 1111; // TODO: 구현 또는 빼기 (김진형)
-}
-
-int EnemyCoolDown(int level, EnemyType type) {
-    return 1111; // TODO: 구현 또는 빼기 (김진형)
+    return 1111; // TODO: 구현 (김진형)
 }
 
 int EnemyHealthPoint(int level, EnemyType type) {
-    return 1111; // TODO: 구현 또는 빼기 (김진형)
+    return 1111; // TODO: 구현 (김진형)
 }
 
-// TODO: 정규 분포를 따르도록 변경 (김진형)
+int EnemyCoolDown(int level, EnemyType type) {
+    return 1111; // TODO: 구현 또는 빼기
+}
+
 int SpawnDelay(NightType type) {
+    // TODO: EARLY와 LATE가 다른 분포를 따르도록 변경 (김진형)
     int delay = 0;
 
     switch (type) {

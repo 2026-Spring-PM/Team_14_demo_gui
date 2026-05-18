@@ -19,8 +19,6 @@ enum class Status {
 enum class RandomEvent {
     NONE,
     DROUGHT,
-    PEST,
-    BOTH
 };
 
 enum class SeedType {
@@ -28,7 +26,7 @@ enum class SeedType {
     SEED1,
     SEED2,
     SEED3,
-    // TODO: 이후 추가
+    // TODO: 이름 변경 및 추가
 };
 
 enum class NightType {
@@ -43,12 +41,12 @@ enum class TrapType {
     ANIMAL1,
     ANIMAL2,
     ANIMAL3,
-    // TODO: 이후 추가
+    // TODO: 이름 변경 및 추가
 };
 
 enum class EnemyType {
     NONE,
     ENEMY1,
     ENEMY2,
-    // TODO: 이후 추가
+    // TODO: 이름 변경 및 추가
 };

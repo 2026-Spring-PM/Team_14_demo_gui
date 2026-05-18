@@ -12,7 +12,7 @@
 
 class Farm {
 public:
-    static const int ROWS = 77; // TODO: ROWS와 COLS를 UI에 맞게 수정
+    static const int ROWS = 77; // TODO: ROWS와 COLS를 UI에 맞게 수정. 아마 Trap과 Seed의 ROW와 COL이 다를 것이므로, 바꾸기.
     static const int COLS = 77;
 
     Seed* SeedField[ROWS][COLS];
@@ -76,13 +76,14 @@ void Farm::AddTime(int minutes) {
 }
 
 bool Farm::PlantSeed(int r, int c, SeedType type) {
-    if (SeedField[r][c] != nullptr) return false;
+    Seed *seed = SeedField[r][c];
+    if (seed != nullptr) return false;
 
     auto it = GameData::SeedTable.find(type);
     if (it != GameData::SeedTable.end()) {
         const SeedData& data = it->second;
 
-        SeedField[r][c] = new Seed(data.Name, data.Price, data.Value, data.CoolDown, type);
+        seed = new Seed(data.Name, data.Price, data.Value, data.CoolDown, type); // TODO: 이 부분 Required C++ components의 다른 개념 (friend나 template 등)을 사용해서 재구현
         AddTime(GameData::InstallPlantTimeCost);
         return true;
     }
@@ -90,21 +91,23 @@ bool Farm::PlantSeed(int r, int c, SeedType type) {
 }
 
 void Farm::WaterSeed(int r, int c) {
-    if (SeedField[r][c] != nullptr) {
-        SeedField[r][c]->Humid = 100;
+    Seed *seed = SeedField[r][c];
+    if (seed != nullptr) {
+        seed->Water();
         AddTime(GameData::WateringTimeCost);
     }
 }
 
 bool Farm::InstallTrap(int r, int c, TrapType type) {
-    if (TrapField[r][c] != nullptr) return false;
+    Trap *trap = TrapField[r][c];
+    if (trap != nullptr) return false;
     std::pair<int, int> pos = {r, c};
 
     auto it = GameData::TrapTable.find(type);
     if (it != GameData::TrapTable.end()) {
         const TrapData& data = it->second;
 
-        TrapField[r][c] = new Trap(data.Name, data.Price, data.Atk, data.CoolDown, pos, data.Range, type);
+        trap = new Trap(data.Name, data.Price, data.Atk, data.CoolDown, pos, data.Range, type); // TODO: 마찬가지
         AddTime(GameData::InstallTrapTimeCost);
         return true;
     }
@@ -113,14 +116,23 @@ bool Farm::InstallTrap(int r, int c, TrapType type) {
 
 void Farm::TriggerDayRandomEvent() {
     IsDrought = DroughtTrigger();
-    IsPest = PestTrigger();
+
+    for (int r = 0; r < ROWS; r++) {
+        for (int c = 0; c < COLS; c++) {
+            Seed *seed = SeedField[r][c];
+            if (seed != nullptr && seed->FieldState == State::ALIVE) {
+                if (PestTrigger()) seed->Kill();
+            }
+        }
+    }
 }
 
 void Farm::TriggerNightRandomEvent() {
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
-            if (TrapField[r][c] != nullptr && TrapField[r][c]->TrapState == State::ALIVE) {
-                if (TrapBreakTrigger()) TrapField[r][c]->Breakdown();
+            Trap *trap = TrapField[r][c];
+            if (trap != nullptr && trap->TrapState == State::ALIVE) {
+                if (TrapBreakTrigger()) trap->Breakdown();
             }
         }
     }
@@ -139,11 +151,11 @@ void Farm::UpdateFarms() {
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
             Seed* seed = SeedField[r][c];
-            if (SeedField[r][c] != nullptr) {
-                if (SeedField[r][c]->FieldState == State::DEAD) {
-                    delete SeedField[r][c];
-                    SeedField[r][c] = nullptr;
-                }
+            if (seed != nullptr) {
+                if (seed->FieldState == State::DEAD) {
+                    delete seed;
+                    seed = nullptr;
+                } else seed->Update(IsDrought);
             }
         }
     }
@@ -176,7 +188,7 @@ void Farm::AddEnemies(int Level, NightType night) {
 void Farm::UpdateEnemies(Status &status, Inventory &inventory) {
     for (auto it = ActiveEnemies.begin(); it != ActiveEnemies.end();) {
         if (it->EnemyState == State::DEAD) {
-            // state.AddMoney(); // 적 사망 시 돈 추가하고 싶으면 코드 추가 -> 이후 업데이트 시 있는 게 좋다면 추가
+            // AddMoney(); // 적 사망 시 돈 추가하고 싶으면 코드 추가 -> 이후 업데이트 시 있는 게 좋다면 추가
             it = ActiveEnemies.erase(it);
         }
         else if (it->EnemyState == State::ALIVE){

@@ -86,11 +86,14 @@ void GameState::ChangePlaybackSpeed(int speed) {
     PlaybackSpeed = speed;
 }
 
+// IMPORTANT: 
+// 시간이 추가되거나 버튼이 눌리면 이 함수 호출. 모든 Update 과정은 이 함수 내에서만 이루어질 것!!!!!!!
 void GameState::Update() {
     if (status == Status::AM) {
         if(farm.Hour >= 18) TransitionToNight();
         else {
-
+            farm.UpdateFarms();
+            // 추가로 작성할 코드가 있다면, 이곳에 작성
         }
     }
     else if (status == Status::PM) {
@@ -107,7 +110,7 @@ void GameState::Update() {
         }
 
         farm.UpdateEnemies(status, inventory);
-        farm.UpdateFarms();
+        // farm.UpdateFarms(); 밤에도 작동시키고 싶으면 주석 제거
 
         if (farm.EnemiesEmpty()) TransitionToDay();
         else if (NightElapsedMinutes >= 720) TransitionToDay();
@@ -146,15 +149,10 @@ RandomEvent GameState::TransitionToDay() {
 
     farm.TriggerDayRandomEvent();
 
-    // TODO: 가뭄 및 병충해로 인한 업데이트 과정 작성 (김진형)
-
     RandomEvent RandomEvent = RandomEvent::NONE;
-    
-    if (farm.IsDrought && farm.IsPest) RandomEvent = RandomEvent::BOTH;
-    else if (farm.IsDrought) RandomEvent = RandomEvent::DROUGHT;
-    else if (farm.IsPest) RandomEvent = RandomEvent::PEST;
+    if (farm.IsDrought) RandomEvent = RandomEvent::DROUGHT;
 
-    return RandomEvent;
+    return RandomEvent; // TODO: 이 RandomEvent 값 return에 따라 UI에 뜨는 아이콘 추가
 }
 
 void GameState::PlayBGM(Status currentStatus) {
