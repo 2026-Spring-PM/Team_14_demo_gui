@@ -29,13 +29,13 @@ int main() {
 
     gs.LoadAllTextures();
 
-    gs.inventory.SeedCount[SeedType::SEED1] = 10; 
-    gs.inventory.SeedCount[SeedType::SEED2] = 5;  
-    gs.inventory.SeedCount[SeedType::SEED3] = 49; 
+    gs.inventory.SeedCount[SeedType::SEED1] = 1; 
+    gs.inventory.SeedCount[SeedType::SEED2] = 1;  
+    gs.inventory.SeedCount[SeedType::SEED3] = 1; 
 
-    gs.inventory.TrapCount[TrapType::ANIMAL1] = 3;
-    gs.inventory.TrapCount[TrapType::ANIMAL2] = 2;
-    gs.inventory.TrapCount[TrapType::ANIMAL3] = 5;
+    gs.inventory.TrapCount[TrapType::ANIMAL1] = 1;
+    gs.inventory.TrapCount[TrapType::ANIMAL2] = 1;
+    gs.inventory.TrapCount[TrapType::ANIMAL3] = 1;
 
     MainUI mUI(&gs);
     BottomUI bUI(&gs);
@@ -71,6 +71,12 @@ int main() {
                 }
                 if (event.key.code == sf::Keyboard::Num3) gs.status = Status::SHOP;
                 if (event.key.code == sf::Keyboard::Num4) gs.status = Status::PAUSE;
+                if (event.key.code == sf::Keyboard::Num4) gs.status = Status::PAUSE;
+                if (event.key.code == sf::Keyboard::Escape){
+                    pauseUI.beforestatus=gs.status;
+                    gs.status = Status::PAUSE;
+
+                }
                 if (event.key.code == sf::Keyboard::Num5) gs.status = Status::PM;
                 if (event.key.code == sf::Keyboard::Num6) gs.status = Status::GAMEOVER;
                 if (event.key.code == sf::Keyboard::Num7) gs.showInv = !gs.showInv;
@@ -109,7 +115,7 @@ int main() {
         ImGui::Text("숫자키 1: 기본 게임 화면 (낮 Map)");
         ImGui::Text("숫자키 2: 기본 게임 화면 (밤 Map)");
         ImGui::Text("숫자키 3: 상점 팝업 띄우기");
-        ImGui::Text("숫자키 4: 일시정지 팝업 띄우기");
+        ImGui::Text("숫자키 4 or esc: 일시정지 팝업 띄우기");
         ImGui::Text("숫자키 5: 밤 알림 팝업 띄우기");
         ImGui::Text("숫자키 6: 게임오버 팝업 띄우기");
         ImGui::Text("숫자키 7: 하단 인벤토리 전환");

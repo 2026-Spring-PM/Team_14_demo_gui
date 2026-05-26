@@ -42,13 +42,15 @@ public:
             
             ImGui::SetCursorPos(clickPos);
             if (ImGui::Button("##newGameClick", {btnWidth, btnHeight})) {
-                // TODO: 새 게임 시작 로직 연결
+                //게임 시작 로직
+                const_cast<GameState*>(gs)->status = Status::AM;
+                
             }
             ImGui::PopStyleColor(3);
         } else {
             ImGui::SetCursorPos({boardStartX, boardStartY});
             if (ImGui::Button("새 게임 (New Game)", {btnWidth, btnHeight})) {
-                // TODO: 새 게임 시작 로직 연결
+                const_cast<GameState*>(gs)->status = Status::AM;
             }
         }
 
@@ -67,12 +69,14 @@ public:
             ImGui::SetCursorPos(clickPos);
             if (ImGui::Button("##exitClick", {btnWidth, btnHeight})) {
                 // TODO: 게임 종료 로직 연결
+                std::exit(0);
             }
             ImGui::PopStyleColor(3);
         } else {
             ImGui::SetCursorPos({boardStartX, boardStartY + btnSpacing});
             if (ImGui::Button("게임 종료 (Exit)", {btnWidth, btnHeight})) {
                 // TODO: 게임 종료 로직 연결
+                std::exit(0);
             }
         }
 

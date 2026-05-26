@@ -16,10 +16,10 @@ public:
     Status status;
     Farm farm;
     Inventory inventory;
-
     int Level;
     int NightElapsedMinutes;
     int Money;
+    int MoneyBefore;
     NightType night;
 
     int PlaybackSpeed;
@@ -38,7 +38,7 @@ public:
     RandomEvent TransitionToDay();
 
     void PlayBGM(Status currentStatus);
-    
+
     bool showInv = false;
 
     SeedType selectedSeed = SeedType::NONE; 
@@ -80,7 +80,7 @@ public:
     sf::Texture thiefTexture;
 };
 
-GameState::GameState() : status(Status::MAIN), Level(1), Money(0) {}
+GameState::GameState() : status(Status::MAIN), Level(1), Money(100),MoneyBefore(100),PlaybackSpeed(1) {}
 
 void GameState::ChangePlaybackSpeed(int speed) {
     PlaybackSpeed = speed;
@@ -89,7 +89,10 @@ void GameState::ChangePlaybackSpeed(int speed) {
 // IMPORTANT: 
 // 시간이 추가되거나 버튼이 눌리면 이 함수 호출. 모든 Update 과정은 이 함수 내에서만 이루어질 것!!!!!!!
 void GameState::Update() {
-    if (status == Status::AM) {
+    if (status == Status::SETTLEMENT) {
+        return; 
+    }
+    else if (status == Status::AM) {
         if(farm.Hour >= 18) TransitionToNight();
         else {
             farm.UpdateFarms();
@@ -112,8 +115,10 @@ void GameState::Update() {
         farm.UpdateEnemies(status, inventory);
         // farm.UpdateFarms(); 밤에도 작동시키고 싶으면 주석 제거
 
-        if (farm.EnemiesEmpty()) TransitionToDay();
-        else if (NightElapsedMinutes >= 720) TransitionToDay();
+        if (farm.EnemiesEmpty()||NightElapsedMinutes >= 720){
+            status=Status::SETTLEMENT;
+        }
+        
     }
 }
 
@@ -144,6 +149,8 @@ void GameState::TransitionToNight() {
 
 RandomEvent GameState::TransitionToDay() {
     // TODO: 낮으로 돌아올 때의 정산 처리 창 및 변수 초기화 과정 입력 + OK를 누르면 이 함수를 호출
+    //status=Status::SETTLEMENT;
+    //daySettlementUI->Open();
     status = Status::AM;
     Level++;
 
@@ -158,7 +165,6 @@ RandomEvent GameState::TransitionToDay() {
 void GameState::PlayBGM(Status currentStatus) {
     // TODO: Audio 재생 함수 구현. 상태에 따라 다른 음악 재생할 것.
 }
-
 void GameState::LoadAllTextures() {
     if (!houseTexture.loadFromFile("assets/image/House.png")) {
         std::cerr << "Failed to load House.png" << std::endl;

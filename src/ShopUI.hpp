@@ -1,10 +1,9 @@
 #pragma once
 #include "UIBase.hpp"
-
+#include "GameData.hpp"
 class ShopUI : public UIBase {
 public:
     ShopUI(const GameState* s) : UIBase(s) {}
-
     void Render() override {
         ImGui::SetNextWindowSize({750.0f, 500.0f});
         ImGui::SetNextWindowPos({265.0f, 110.0f});
@@ -45,7 +44,8 @@ public:
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.0f, 0.0f, 0.2f)); 
         
         if (ImGui::Button("돌아가기", {120.0f, 40.0f})) {
-            // TODO: 화면 닫기 또는 맵으로 돌아가는 로직 연결
+            const_cast<GameState*>(gs)->status = Status::AM;
+
         }
         ImGui::PopStyleColor(4); 
 
@@ -82,32 +82,72 @@ public:
         };
 
         // 1열 (씨앗)
-        if (DrawShopItem(gs->riceSeedTexture, "##Seed1", "10$", startX, startY)) { 
-            // TODO: RiceSeed 구매 로직 연결
+        int wheatPrice = GameData::SeedTable.at(SeedType::WHEAT).Price;
+        if (DrawShopItem(gs->riceSeedTexture, "##Seed1", "5$", startX, startY)) {
+            if (gs->Money >= wheatPrice) {
+                const_cast<GameState*>(gs)->Update();
+                const_cast<GameState*>(gs)->Money -= wheatPrice;
+                const_cast<GameState*>(gs)->inventory.SeedCount[SeedType::WHEAT]++;
+            }
         }
-        if (DrawShopItem(gs->potatoSeedTexture, "##Seed2", "20$", startX + btnW + gapX, startY)) { 
-            // TODO: PotatoSeed 구매 로직 연결
+        
+        int potatoPrice = GameData::SeedTable.at(SeedType::POTATO).Price;
+        if (DrawShopItem(gs->potatoSeedTexture, "##Seed2", "10$", startX + btnW + gapX, startY)) { 
+            if (gs->Money >= potatoPrice) {
+                const_cast<GameState*>(gs)->Update();
+                const_cast<GameState*>(gs)->Money -= potatoPrice;
+                const_cast<GameState*>(gs)->inventory.SeedCount[SeedType::POTATO]++;
+            }
         }
-        if (DrawShopItem(gs->carrotSeedTexture, "##Seed3", "30$", startX + (btnW + gapX) * 2, startY)) { 
-            // TODO: CarrotSeed 구매 로직 연결
+        
+        int carrotPrice = GameData::SeedTable.at(SeedType::CARROT).Price;
+        if (DrawShopItem(gs->carrotSeedTexture, "##Seed3", "20$", startX + (btnW + gapX) * 2, startY)) { 
+            if (gs->Money >= carrotPrice) {
+                const_cast<GameState*>(gs)->Update();
+                const_cast<GameState*>(gs)->Money -= carrotPrice;
+                const_cast<GameState*>(gs)->inventory.SeedCount[SeedType::CARROT]++;
+            }
         }
 
         // 2열 (함정 동물)
         float row2Y = startY + btnH + gapY;
-        if (DrawShopItem(gs->cowTrapTexture, "##Trap1", "100$", startX, row2Y)) { 
-            // TODO: CowTrap 구매 로직 연결
+        int cowPrice = GameData::TrapTable.at(TrapType::COW).Price;
+        if (DrawShopItem(gs->cowTrapTexture, "##Trap1", "40$", startX, row2Y)) { 
+            if (gs->Money >= cowPrice) {
+                const_cast<GameState*>(gs)->Update();
+                const_cast<GameState*>(gs)->Money -= cowPrice;
+                const_cast<GameState*>(gs)->inventory.TrapCount[TrapType::COW]++;
+            }
         }
-        if (DrawShopItem(gs->pigTrapTexture, "##Trap2", "200$", startX + btnW + gapX, row2Y)) { 
-            // TODO: PigTrap 구매 로직 연결
+        
+        int pigPrice = GameData::TrapTable.at(TrapType::PIG).Price;
+        if (DrawShopItem(gs->pigTrapTexture, "##Trap2", "50$", startX + btnW + gapX, row2Y)) { 
+            if (gs->Money >= pigPrice) {
+                const_cast<GameState*>(gs)->Update();
+                const_cast<GameState*>(gs)->Money -= pigPrice;
+                const_cast<GameState*>(gs)->inventory.TrapCount[TrapType::PIG]++;
+            }
         }
-        if (DrawShopItem(gs->horseTrapTexture, "##Trap3", "300$", startX + (btnW + gapX) * 2, row2Y)) { 
-            // TODO: HorseTrap 구매 로직 연결
+        
+        int horsePrice = GameData::TrapTable.at(TrapType::HORSE).Price;
+        if (DrawShopItem(gs->horseTrapTexture, "##Trap3", "60$", startX + (btnW + gapX) * 2, row2Y)) { 
+            if (gs->Money >= horsePrice) {
+                const_cast<GameState*>(gs)->Update();
+                const_cast<GameState*>(gs)->Money -= horsePrice;
+                const_cast<GameState*>(gs)->inventory.TrapCount[TrapType::HORSE]++;
+            }
         }
 
         // 3열 (총알 - 돌)
         float row3Y = row2Y + btnH + gapY;
+        int bulletPrice = 50;
+        
         if (DrawShopItem(gs->stoneTexture, "##Bullet", "50$", startX, row3Y)) { 
-            // TODO: Bullet(Stone) 구매 로직 연결
+            if (gs->Money >= bulletPrice) {
+                const_cast<GameState*>(gs)->Update();
+                const_cast<GameState*>(gs)->Money -= bulletPrice;
+                const_cast<GameState*>(gs)->inventory.Bullets++; 
+            }
         }
 
         // 5. 룰렛 영역

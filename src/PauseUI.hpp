@@ -4,7 +4,7 @@
 class PauseUI : public UIBase {
 public:
     PauseUI(const GameState* s) : UIBase(s) {}
-
+    Status beforestatus;
     void Render() override {
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.2f, 0.2f, 0.2f, 0.9f));
 
@@ -28,7 +28,7 @@ public:
         ImGui::Text("%s", dayTxt);
 
         char bulletTxt[64];
-        sprintf(bulletTxt, "총알 : %d", 4); // TODO: 실제 총알 개수 변수 연동
+        sprintf(bulletTxt, "총알 : %d", gs->inventory.Bullets);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(bulletTxt).x) * 0.5f);
         ImGui::Text("%s", bulletTxt);
 
@@ -38,12 +38,16 @@ public:
         ImGui::Text("%s", moneyTxt);
 
         char trapTxt[128];
-        sprintf(trapTxt, "함정 : 소 x 3, 돼지 x 2, 말 x 5"); // TODO: 실제 함정 개수 변수 연동
+        sprintf(trapTxt, "함정 : 소 x %d, 돼지 x %d, 말 x %d",gs->inventory.TrapCount.at(TrapType::COW)
+        ,gs->inventory.TrapCount.at(TrapType::PIG),gs->inventory.TrapCount.at(TrapType::HORSE));
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(trapTxt).x) * 0.5f);
         ImGui::Text("%s", trapTxt);
 
         char seedTxt[128];
-        sprintf(seedTxt, "씨앗 : 밀 x 10, 감자 x 5, 당근 x  49"); // TODO: 실제 씨앗 개수 변수 연동
+        sprintf(seedTxt, "씨앗 : 밀 x %d, 감자 x %d, 당근 x  %d", 
+                gs->inventory.SeedCount.at(SeedType::WHEAT), 
+                gs->inventory.SeedCount.at(SeedType::POTATO), 
+                gs->inventory.SeedCount.at(SeedType::CARROT));
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(seedTxt).x) * 0.5f);
         ImGui::Text("%s", seedTxt);
 
@@ -52,7 +56,7 @@ public:
         ImVec2 bSz = {280, 50};
 
         if (ImGui::Button("계속하기 (Resume)", bSz)) {
-            // TODO:  일시정지 해제 
+            const_cast<GameState*>(gs)->status =beforestatus;
         }
 
         ImGui::Spacing();
@@ -64,6 +68,8 @@ public:
 
         if (ImGui::Button("메인 메뉴로 (Main Menu)", bSz)) {
             // TODO: 게임 상태 완전 초기화 후, 상태를 MAIN으로 변경
+            
+            const_cast<GameState*>(gs)->status =Status::MAIN;
         }
 
         ImGui::End();
