@@ -29,8 +29,8 @@ enum class NightType {
 
 enum class SeedType {
     NONE,
-    SEED1, SEED2, SEED3, // 👈 기존 UI에서 쓰던 기본 명칭
-    WHEAT = SEED1, POTATO = SEED2, CARROT = SEED3 // 👈 정산창에서 쓸 별칭들!
+    SEED1, SEED2, SEED3, // 기존 명칭
+    WHEAT = SEED1, POTATO = SEED2, CARROT = SEED3 //  별칭들
 };
 
 enum class TrapType {

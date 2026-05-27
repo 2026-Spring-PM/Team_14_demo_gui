@@ -6,9 +6,6 @@ public:
     NightAlertUI(const GameState* s) : UIBase(s) {}
 
     void Render() override {
-        // TODO: gs->status == Status::PM 이 되면 
-        // 팝업을 띄울 변수 (예: gs->showNightAlert)가 true일 때 UI 호출
-
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.15f, 0.3f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.4f, 0.5f, 0.8f, 1.0f));
 
@@ -43,7 +40,9 @@ public:
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
 
         if (ImGui::Button("START", bSz)) {
-            // TODO:  팝업 닫기 (gs->showNightAlert = false;) 및 디펜스 웨이브 시작
+            // 팝업 닫기 (gs->showNightAlert = false;) 및 디펜스 웨이브 시작
+            const_cast<GameState*>(gs)->showNightAlert = false;
+            const_cast<GameState*>(gs)->TransitionToNight();         
         }
 
         ImGui::PopStyleColor(2); 

@@ -92,14 +92,15 @@ int main() {
 
             if (gs.status == Status::SHOP) shopUI.Render();
             if (gs.status == Status::PAUSE) pauseUI.Render();
-            if (gs.status == Status::PM) nightUI.Render();
             if (gs.status == Status::GAMEOVER) overUI.Render();
             if (gs.status == Status::SETTLEMENT) settlementUI.Render();
+            if (gs.showNightAlert) nightUI.Render();
         }
 
         ImGui::SetNextWindowPos({10, 10});
         ImGui::Begin("Test Guide", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::Text("숫자키 0: 메인 메뉴로");
+        
         ImGui::Text("숫자키 1: 기본 게임 화면 (낮 Map)");
         ImGui::Text("숫자키 2: 기본 게임 화면 (밤 Map)");
         ImGui::Text("숫자키 3: 상점 팝업 띄우기");

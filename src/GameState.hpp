@@ -22,6 +22,7 @@ public:
 
     int PlaybackSpeed;
     int TickCounter;
+    
 
     GameState();
 
@@ -39,6 +40,7 @@ public:
     void Reset();
 
     bool showInv = false;
+    bool showNightAlert = false;
 
     SeedType selectedSeed = SeedType::NONE; 
     TrapType selectedTrap = TrapType::NONE;
@@ -90,7 +92,11 @@ void GameState::ChangePlaybackSpeed(int speed) {
 void GameState::Update() {
     
     if (status == Status::AM) {
-        if(farm.Hour >= 18) TransitionToNight();
+        if(farm.Hour >= 18){
+            showNightAlert=true;
+            MoneyBefore=Money;
+            inventory.BulletsBefore=inventory.Bullets;
+        }
         else {
             farm.UpdateFarms();
             // 추가로 작성할 코드가 있다면, 이곳에 작성
@@ -120,7 +126,6 @@ void GameState::Update() {
 }
 
 bool GameState::CanVisitShop() {
-    // TODO: 상점 버튼 누르면 이 함수 먼저 호출
     if (status != Status::AM) return false;
     farm.AddTime(GameData::ShoppingTimeCost);
     return true;
@@ -134,7 +139,6 @@ bool GameState::CanPlayMiniGame() {
 }
 
 void GameState::TransitionToNight() {
-    // TODO: UI를 띄운 뒤, 버튼을 누르면 이 함수를 호출
     status = Status::PM;
 
     farm.TriggerNightRandomEvent();
@@ -146,11 +150,10 @@ void GameState::TransitionToNight() {
 
 RandomEvent GameState::TransitionToDay() {
     // TODO: 낮으로 돌아올 때의 정산 처리 창 및 변수 초기화 과정 입력 + OK를 누르면 이 함수를 호출
-    //status=Status::SETTLEMENT;
-    //daySettlementUI->Open();
+    MoneyBefore=Money;
+    inventory.BulletsBefore=inventory.Bullets;
     status = Status::AM;
     Level++;
-
     farm.TriggerDayRandomEvent();
 
     RandomEvent RandomEvent = RandomEvent::NONE;

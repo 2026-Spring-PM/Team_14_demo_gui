@@ -118,7 +118,7 @@ public:
 
         if (ImGui::Button("계속하기", bSz)) {
             // TODO: 정산 창을 닫고 다음 낮(AM) 진행 상태로 온전히 넘어가도록 연결
-            auto event = const_cast<GameState*>(gs)->TransitionToDay();
+            const_cast<GameState*>(gs)->TransitionToDay();
         }
 
         ImGui::End();

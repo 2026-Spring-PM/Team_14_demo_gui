@@ -67,9 +67,7 @@ public:
         ImGui::PopStyleColor(); 
 
         if (ImGui::Button("메인 메뉴로 (Main Menu)", bSz)) {
-            // TODO: 게임 상태 완전 초기화 후, 상태를 MAIN으로 변경
             GameState* mgs = const_cast<GameState*>(gs);
-            // 2. GameState 내부에 새로 만든 Reset 함수를 호출하여 완벽하게 태초 마을로 이동!
             mgs->Reset();
         }
 
