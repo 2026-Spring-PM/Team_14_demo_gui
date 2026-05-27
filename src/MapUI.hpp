@@ -177,6 +177,8 @@ private:
                                 
                                 if (ImGui::IsItemClicked()) {
                                     // TODO : 물뿌리개 아이콘 클릭 시 작물에 물을 주는 기능 구현.
+                                    const_cast<GameState*>(gs)->farm.WaterSeed(r,c);
+                                    const_cast<GameState*>(gs)->Update();
                                 }
                             }
 
@@ -249,8 +251,11 @@ private:
                                 mgs->targetCol = c;
                                 mgs->wantToPlantSeed = true;
 
-                                // TODO : 작물 심기 임시 코드. 수정 필요.
-                                mgs->farm.SeedField[r][c] = new Seed("Test", 0, 0, 0, heldSeed);
+                                // 작물 심기
+                                if (mgs->farm.PlantSeed(r, c, heldSeed)) {
+                                    mgs->Update(); // 시간이 변경되었으므로 밤으로 전환될 조건이 되었는지 체크
+                                }
+                                
                                 mgs->selectedSeed = SeedType::NONE;
                             } 
                             else if (tileType == 0 && mgs->selectedTrap != TrapType::NONE && mgs->farm.TrapField[r][c] == nullptr) {
@@ -259,12 +264,15 @@ private:
                                 mgs->targetCol = c;
                                 mgs->wantToInstallTrap = true;
 
-                                // TODO: 함정 설치 임시 코드. 수정 필요.
-                                mgs->farm.TrapField[r][c] = new Trap("Test", 0, 0, 0, std::make_pair(r, c), std::make_pair(0, 0), heldTrap);
+                                // 함정 설치
+                                auto it = GameData::TrapTable.find(heldTrap);
+                                if (mgs->farm.InstallTrap(r, c, heldTrap)) {
+                                    mgs->Update(); // 시간 체크 및 상태 업데이트
+                                }
+                                
                                 mgs->selectedTrap = TrapType::NONE;
                             }
                         }
-
                         if (isHovered && tileType == 0) {
                             if ((mgs->selectedTrap != TrapType::NONE && mgs->farm.TrapField[r][c] == nullptr) || 
                                 (mgs->farm.TrapField[r][c] != nullptr)) {

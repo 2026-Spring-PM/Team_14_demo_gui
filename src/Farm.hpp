@@ -10,10 +10,19 @@
 #include "GameData.hpp"
 #include "Inventory.hpp"
 
+template <typename ObjectType, typename DataType, typename EnumType>
+ObjectType* CreateFieldObject(const DataType& data, EnumType type, std::pair<int, int> pos = {0,0}) {
+    if constexpr (std::is_same_v<ObjectType, Seed>) {
+        return new Seed(data.Name, data.Price, data.Value, data.CoolDown, type);
+    } else {
+        return new Trap(data.Name, data.Price, data.Atk, data.CoolDown, pos, data.Range, type);
+    }
+}
+
 class Farm {
 public:
-    static const int ROWS = 77; // TODO: ROWS와 COLS를 UI에 맞게 수정. 아마 Trap과 Seed의 ROW와 COL이 다를 것이므로, 바꾸기.
-    static const int COLS = 77;
+    static const int ROWS = 5; // TODO: ROWS와 COLS를 UI에 맞게 수정. 아마 Trap과 Seed의 ROW와 COL이 다를 것이므로, 바꾸기.
+    static const int COLS = 9;
 
     Seed* SeedField[ROWS][COLS];
     Trap* TrapField[ROWS][COLS];
@@ -76,14 +85,12 @@ void Farm::AddTime(int minutes) {
 }
 
 bool Farm::PlantSeed(int r, int c, SeedType type) {
-    Seed *seed = SeedField[r][c];
-    if (seed != nullptr) return false;
+    if (SeedField[r][c] != nullptr) return false;
 
     auto it = GameData::SeedTable.find(type);
     if (it != GameData::SeedTable.end()) {
-        const SeedData& data = it->second;
-
-        seed = new Seed(data.Name, data.Price, data.Value, data.CoolDown, type); // TODO: 이 부분 Required C++ components의 다른 개념 (friend나 template 등)을 사용해서 재구현
+        SeedField[r][c] = CreateFieldObject<Seed>(it->second, type);
+        
         AddTime(GameData::InstallPlantTimeCost);
         return true;
     }
@@ -99,15 +106,13 @@ void Farm::WaterSeed(int r, int c) {
 }
 
 bool Farm::InstallTrap(int r, int c, TrapType type) {
-    Trap *trap = TrapField[r][c];
-    if (trap != nullptr) return false;
+    if (TrapField[r][c] != nullptr) return false;
     std::pair<int, int> pos = {r, c};
 
     auto it = GameData::TrapTable.find(type);
     if (it != GameData::TrapTable.end()) {
-        const TrapData& data = it->second;
-
-        trap = new Trap(data.Name, data.Price, data.Atk, data.CoolDown, pos, data.Range, type); // TODO: 마찬가지
+        TrapField[r][c] = CreateFieldObject<Trap>(it->second, type, pos);
+        
         AddTime(GameData::InstallTrapTimeCost);
         return true;
     }
@@ -155,6 +160,7 @@ void Farm::UpdateFarms() {
                 if (seed->FieldState == State::DEAD) {
                     delete seed;
                     seed = nullptr;
+                    SeedField[r][c] = nullptr;
                 } else seed->Update(IsDrought);
             }
         }

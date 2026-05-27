@@ -54,7 +54,6 @@ private:
         ImGui::SameLine(200); 
         if (gs->status == Status::PM) ImGui::BeginDisabled();
         if (ImGui::Button("상점", {60, 40})) {
-            // TODO: 상점 UI 오픈
             if (const_cast<GameState*>(gs)->CanVisitShop()) {
                 const_cast<GameState*>(gs)->Update();
                 const_cast<GameState*>(gs)->status = Status::SHOP;
@@ -69,7 +68,6 @@ private:
         char sTxt[32];
         sprintf(sTxt, "재생속도(%dx)", gs->PlaybackSpeed);
         if (ImGui::Button(sTxt, {130, 40})) {
-            // TODO : 재생속도 변경
             const_cast<GameState*>(gs)->Update();
             int nextSpeed = gs->PlaybackSpeed + 1;
             if (nextSpeed > 3) {
