@@ -2,10 +2,8 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <iostream>
-
 #include "Enums.hpp"
 #include "Enemy.hpp"
-#include "GameState.hpp"
 #include "Mechanism.hpp"
 #include "GameData.hpp"
 #include "Farm.hpp"
@@ -38,6 +36,7 @@ public:
     RandomEvent TransitionToDay();
 
     void PlayBGM(Status currentStatus);
+    void Reset();
 
     bool showInv = false;
 
@@ -80,8 +79,8 @@ public:
     sf::Texture thiefTexture;
 };
 
-GameState::GameState() : status(Status::MAIN), Level(1), Money(100),MoneyBefore(100),PlaybackSpeed(1) {}
-
+GameState::GameState() : status(Status::MAIN), Level(1), NightElapsedMinutes(0), Money(100), MoneyBefore(100), 
+      PlaybackSpeed(1), TickCounter(0), showInv(false) {}
 void GameState::ChangePlaybackSpeed(int speed) {
     PlaybackSpeed = speed;
 }
@@ -89,10 +88,8 @@ void GameState::ChangePlaybackSpeed(int speed) {
 // IMPORTANT: 
 // 시간이 추가되거나 버튼이 눌리면 이 함수 호출. 모든 Update 과정은 이 함수 내에서만 이루어질 것!!!!!!!
 void GameState::Update() {
-    if (status == Status::SETTLEMENT) {
-        return; 
-    }
-    else if (status == Status::AM) {
+    
+    if (status == Status::AM) {
         if(farm.Hour >= 18) TransitionToNight();
         else {
             farm.UpdateFarms();
@@ -164,6 +161,32 @@ RandomEvent GameState::TransitionToDay() {
 
 void GameState::PlayBGM(Status currentStatus) {
     // TODO: Audio 재생 함수 구현. 상태에 따라 다른 음악 재생할 것.
+}
+void GameState::Reset() {
+    status = Status::MAIN;
+    Level = 1;
+    NightElapsedMinutes = 0;
+    Money = 100;
+    MoneyBefore = 100;
+    PlaybackSpeed = 1;
+    TickCounter = 0;
+    showInv = false;
+    selectedSeed = SeedType::NONE;
+    selectedTrap = TrapType::NONE;
+    targetRow = -1;
+    targetCol = -1;
+    wantToInstallTrap = false;
+    wantToPlantSeed = false;
+
+    inventory.SeedCount[SeedType::SEED1] = 1; 
+    inventory.SeedCount[SeedType::SEED2] = 1;  
+    inventory.SeedCount[SeedType::SEED3] = 1; 
+
+    inventory.TrapCount[TrapType::ANIMAL1] = 1;
+    inventory.TrapCount[TrapType::ANIMAL2] = 1;
+    inventory.TrapCount[TrapType::ANIMAL3] = 1;
+    farm = Farm();
+
 }
 void GameState::LoadAllTextures() {
     if (!houseTexture.loadFromFile("assets/image/House.png")) {

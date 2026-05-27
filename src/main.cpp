@@ -24,19 +24,8 @@ int main() {
     ImGui::SFML::UpdateFontTexture();
 
     GameState gs;
-    gs.status = Status::MAIN;
-    gs.showInv = false;
-
     gs.LoadAllTextures();
-
-    gs.inventory.SeedCount[SeedType::SEED1] = 1; 
-    gs.inventory.SeedCount[SeedType::SEED2] = 1;  
-    gs.inventory.SeedCount[SeedType::SEED3] = 1; 
-
-    gs.inventory.TrapCount[TrapType::ANIMAL1] = 1;
-    gs.inventory.TrapCount[TrapType::ANIMAL2] = 1;
-    gs.inventory.TrapCount[TrapType::ANIMAL3] = 1;
-
+    gs.Reset();
     MainUI mUI(&gs);
     BottomUI bUI(&gs);
     MapUI mapUI(&gs);
@@ -70,7 +59,6 @@ int main() {
                     gs.status = Status::PM;
                 }
                 if (event.key.code == sf::Keyboard::Num3) gs.status = Status::SHOP;
-                if (event.key.code == sf::Keyboard::Num4) gs.status = Status::PAUSE;
                 if (event.key.code == sf::Keyboard::Num4) gs.status = Status::PAUSE;
                 if (event.key.code == sf::Keyboard::Escape){
                     pauseUI.beforestatus=gs.status;

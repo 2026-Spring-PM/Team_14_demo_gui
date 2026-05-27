@@ -18,7 +18,7 @@ public:
     bool UseTrap(TrapType type, int amount);
 };
 
-Inventory::Inventory() : Bullets(0),BulletsBefore(0) {
+Inventory::Inventory() : Bullets(5),BulletsBefore(5) {
     SeedCount[SeedType::NONE] = 0;
     TrapCount[TrapType::NONE] = 0;
 }

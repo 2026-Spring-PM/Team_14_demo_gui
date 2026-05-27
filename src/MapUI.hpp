@@ -253,7 +253,8 @@ private:
 
                                 // 작물 심기
                                 if (mgs->farm.PlantSeed(r, c, heldSeed)) {
-                                    mgs->Update(); // 시간이 변경되었으므로 밤으로 전환될 조건이 되었는지 체크
+                                    mgs->Update();
+                                    mgs->inventory.UseSeed(heldSeed,1);
                                 }
                                 
                                 mgs->selectedSeed = SeedType::NONE;
@@ -268,6 +269,7 @@ private:
                                 auto it = GameData::TrapTable.find(heldTrap);
                                 if (mgs->farm.InstallTrap(r, c, heldTrap)) {
                                     mgs->Update(); // 시간 체크 및 상태 업데이트
+                                    mgs->inventory.UseTrap(heldTrap,1);
                                 }
                                 
                                 mgs->selectedTrap = TrapType::NONE;

@@ -87,7 +87,7 @@ public:
             if (gs->Money >= wheatPrice) {
                 const_cast<GameState*>(gs)->Update();
                 const_cast<GameState*>(gs)->Money -= wheatPrice;
-                const_cast<GameState*>(gs)->inventory.SeedCount[SeedType::WHEAT]++;
+                const_cast<GameState*>(gs)->inventory.AddSeed(SeedType::WHEAT,1);
             }
         }
         
@@ -96,7 +96,7 @@ public:
             if (gs->Money >= potatoPrice) {
                 const_cast<GameState*>(gs)->Update();
                 const_cast<GameState*>(gs)->Money -= potatoPrice;
-                const_cast<GameState*>(gs)->inventory.SeedCount[SeedType::POTATO]++;
+                const_cast<GameState*>(gs)->inventory.AddSeed(SeedType::POTATO,1);
             }
         }
         
@@ -105,7 +105,7 @@ public:
             if (gs->Money >= carrotPrice) {
                 const_cast<GameState*>(gs)->Update();
                 const_cast<GameState*>(gs)->Money -= carrotPrice;
-                const_cast<GameState*>(gs)->inventory.SeedCount[SeedType::CARROT]++;
+                const_cast<GameState*>(gs)->inventory.AddSeed(SeedType::CARROT,1);
             }
         }
 
@@ -116,7 +116,7 @@ public:
             if (gs->Money >= cowPrice) {
                 const_cast<GameState*>(gs)->Update();
                 const_cast<GameState*>(gs)->Money -= cowPrice;
-                const_cast<GameState*>(gs)->inventory.TrapCount[TrapType::COW]++;
+                const_cast<GameState*>(gs)->inventory.AddTrap(TrapType::COW,1);
             }
         }
         
@@ -125,7 +125,7 @@ public:
             if (gs->Money >= pigPrice) {
                 const_cast<GameState*>(gs)->Update();
                 const_cast<GameState*>(gs)->Money -= pigPrice;
-                const_cast<GameState*>(gs)->inventory.TrapCount[TrapType::PIG]++;
+                const_cast<GameState*>(gs)->inventory.AddTrap(TrapType::PIG,1);
             }
         }
         
@@ -134,7 +134,7 @@ public:
             if (gs->Money >= horsePrice) {
                 const_cast<GameState*>(gs)->Update();
                 const_cast<GameState*>(gs)->Money -= horsePrice;
-                const_cast<GameState*>(gs)->inventory.TrapCount[TrapType::HORSE]++;
+                const_cast<GameState*>(gs)->inventory.AddTrap(TrapType::HORSE,1);
             }
         }
 
