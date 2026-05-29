@@ -16,14 +16,10 @@ public:
         ImGui::SetNextWindowPos({0, 0});
 
         bool isNight = (gs->farm.Hour >= 18 || gs->farm.Hour < 6);
-        
         ImVec4 bgCol = isNight ? ImVec4(0.15f, 0.15f, 0.22f, 1.0f) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-        
         ImGui::PushStyleColor(ImGuiCol_WindowBg, bgCol);
         ImGui::Begin("MapArea", nullptr, flgs);
-
         renderIntegratedMap();
-
         ImGui::End();
         ImGui::PopStyleColor();
 
@@ -31,15 +27,9 @@ public:
     }
 
 private:
+    int activeTimerR = -1;
+    int activeTimerC = -1;
     void renderIntegratedMap() {
-        // TODO: 'G'를 누르면 성장 상태가되는 코드(디버그용). 작물 시간에 따라 성장상태가 되도록 수정 필요.
-        static bool debugMatureToggle = false;
-        static bool prevG = false;
-        bool currG = sf::Keyboard::isKeyPressed(sf::Keyboard::G);
-        if (currG && !prevG) {
-            debugMatureToggle = !debugMatureToggle;
-        }
-        prevG = currG;
 
         int layout[5][9] = {
             {1, 1, 1, 0, 0, 0, 0, 0, 0}, 
@@ -66,8 +56,7 @@ private:
 
         for (int r = 0; r < 5; r++) {
             for (int c = 0; c < 9; c++) {
-                int tileType = layout[r][c]; 
-
+                int tileType = layout[r][c];
                 if (tileType == 7) {
                     if (c == 0) { 
                         float mergedWidth = (tileWidth * 3.0f) + (spacingX * 2.0f); 
@@ -141,11 +130,12 @@ private:
                     ImGui::Image(tileSprite);
                     
                     if (tileType == 1 && gs->farm.SeedField[r][c] != nullptr) {
-                        SeedType sType = gs->farm.SeedField[r][c]->Type;
+                        Seed* seed = gs->farm.SeedField[r][c]; 
+                        SeedType sType = seed->Type;
                         sf::Texture* cropTex = nullptr;
                         
                         // TODO:임시 코드. 실제 연동 시 gs->farm.SeedField[r][c]->IsMature() 등의 판별 필요.
-                        bool isMature = debugMatureToggle; 
+                        bool isMature = seed->IsGrown();
                         
                         if (sType == SeedType::SEED1) cropTex = isMature ? const_cast<sf::Texture*>(&gs->matureRiceTexture) : const_cast<sf::Texture*>(&gs->immatureRiceTexture);
                         else if (sType == SeedType::SEED2) cropTex = isMature ? const_cast<sf::Texture*>(&gs->maturePotatoTexture) : const_cast<sf::Texture*>(&gs->immaturePotatoTexture);
@@ -169,14 +159,17 @@ private:
                                 float wcScale = 0.25f; 
                                 wcSprite.setScale({(tileWidth / gs->wateringCanTexture.getSize().x) * wcScale, (tileHeight / gs->wateringCanTexture.getSize().y) * wcScale});
                                 
-                                float wcOffsetX = 5.0f; 
+                                float wcOffsetX = 5.0f;
                                 float wcOffsetY = tileHeight - (tileHeight * wcScale) - 5.0f; 
-                                
                                 ImGui::SetCursorPos({currentCursorPos.x + wcOffsetX, currentCursorPos.y + wcOffsetY});
                                 ImGui::Image(wcSprite);
-                                
+                                if (ImGui::IsItemHovered()) {
+                                    if (gs->farm.SeedField[r][c] != nullptr) {
+                                        ImGui::SetTooltip("습도: %d%%", seed->Humid);
+                                    }
+                                }
+
                                 if (ImGui::IsItemClicked()) {
-                                    // TODO : 물뿌리개 아이콘 클릭 시 작물에 물을 주는 기능 구현.
                                     const_cast<GameState*>(gs)->farm.WaterSeed(r,c);
                                     const_cast<GameState*>(gs)->Update();
                                 }
@@ -193,9 +186,14 @@ private:
                                 ImGui::SetCursorPos({currentCursorPos.x + clockOffsetX, currentCursorPos.y + clockOffsetY});
                                 ImGui::Image(clockSprite);
                                 
-                                if (ImGui::IsItemClicked()) {
-                                    // TODO : 시계 아이콘 클릭 시 작물의 남은 시간이 나타나는 기능 구현.
+                                if (ImGui::IsItemHovered()) {
+                                    if (gs->farm.SeedField[r][c] != nullptr) {
+                                        int remainingTime = static_cast<int>(gs->farm.SeedField[r][c]->CoolDown - gs->farm.SeedField[r][c]->Timer);
+                                        if (remainingTime < 0) remainingTime = 0;
+                                        ImGui::SetTooltip("남은 시간: %d", remainingTime);
+                                    }
                                 }
+            
                             }
                         }
                     } 
