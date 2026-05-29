@@ -48,7 +48,8 @@ public:
 
         char trapTxt[128];
         // TODO: 보유 개수를 관리하는 실제 변수로 수정 
-        sprintf(trapTxt, "함정 : 소 x %d, 돼지 x %d, 말 x %d", 1, 1, 0); 
+        sprintf(trapTxt, "함정 : 소 x %d, 돼지 x %d, 말 x %d", gs->inventory.TrapCount.at(TrapType::COW)
+        ,gs->inventory.TrapCount.at(TrapType::PIG),gs->inventory.TrapCount.at(TrapType::HORSE)); 
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(trapTxt).x) * 0.5f);
         ImGui::Text("%s", trapTxt);
 
@@ -56,7 +57,10 @@ public:
 
         char seedTxt[128];
         // TODO: 보유 개수를 관리하는 실제 변수로 수정.
-        sprintf(seedTxt, "씨앗 : 밀 x %d, 감자 x %d, 당근 x %d", 10, 49, 0);
+        sprintf(seedTxt, "씨앗 : 밀 x %d, 감자 x %d, 당근 x %d",
+                gs->inventory.SeedCount.at(SeedType::WHEAT), 
+                gs->inventory.SeedCount.at(SeedType::POTATO), 
+                gs->inventory.SeedCount.at(SeedType::CARROT));
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(seedTxt).x) * 0.5f);
         ImGui::Text("%s", seedTxt);
 
@@ -67,12 +71,11 @@ public:
         ImVec2 bSz = {250, 50};
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - bSz.x) * 0.5f);
 
-        if (ImGui::Button("메인 메뉴로 (Main Menu)", bSz)) {
-            // TODO: GameState 내의 모든 변수 처음 상태로 초기화, gs->status = Status::MAIN;
+        if (ImGui::Button("메인 메뉴로 (Main Menu)", bSz)){
+            GameState* mgs = const_cast<GameState*>(gs);
+            mgs->Reset();
         }
-
         ImGui::End();
-
         ImGui::PopStyleColor(); 
     }
 };

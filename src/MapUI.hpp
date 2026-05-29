@@ -133,8 +133,7 @@ private:
                         Seed* seed = gs->farm.SeedField[r][c]; 
                         SeedType sType = seed->Type;
                         sf::Texture* cropTex = nullptr;
-                        
-                        // TODO:임시 코드. 실제 연동 시 gs->farm.SeedField[r][c]->IsMature() 등의 판별 필요.
+                    
                         bool isMature = seed->IsGrown();
                         
                         if (sType == SeedType::SEED1) cropTex = isMature ? const_cast<sf::Texture*>(&gs->matureRiceTexture) : const_cast<sf::Texture*>(&gs->immatureRiceTexture);

@@ -39,7 +39,6 @@ public:
         ImGui::Spacing();
 
         char bulletTxt[64];
-        // TODO: 실제 총알(돌) 변동 전/후 데이터
         char bulletdifference[20]; 
         int bulletdif = gs->inventory.Bullets - gs->inventory.BulletsBefore;
         if (bulletdif > 0) {
@@ -55,7 +54,6 @@ public:
         ImGui::Spacing();
 
         char moneyTxt[64];
-        // TODO: 실제 정산 전/후 소지금 및 획득 금액 
         char moneydifference[20]; 
         int moneydif = gs->Money - gs->MoneyBefore;
         if (moneydif > 0) {
@@ -70,10 +68,8 @@ public:
 
         ImGui::Spacing();
 
-        // 5. 함정 상태 표시 (Trap1, Trap2, Trap3)
         char trapTxt[128];
         char trapDiff[10];
-        // TODO: 실제 보유 현황
         int trapsum=gs->inventory.TrapCount.at(TrapType::COW)+gs->inventory.TrapCount.at(TrapType::PIG)+gs->inventory.TrapCount.at(TrapType::HORSE);
         if (trapsum > 0) {
             snprintf(trapDiff, sizeof(trapDiff), "+%d", trapsum);
@@ -87,7 +83,6 @@ public:
 
         ImGui::Spacing();
 
-        // TODO: 실제 보유 현황 
         char seedTxt[128];
         char seedDiff[10];
 
@@ -117,12 +112,9 @@ public:
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - bSz.x) * 0.5f);
 
         if (ImGui::Button("계속하기", bSz)) {
-            // TODO: 정산 창을 닫고 다음 낮(AM) 진행 상태로 온전히 넘어가도록 연결
             const_cast<GameState*>(gs)->TransitionToDay();
         }
-
         ImGui::End();
-
         ImGui::PopStyleColor(); 
     }
 };
