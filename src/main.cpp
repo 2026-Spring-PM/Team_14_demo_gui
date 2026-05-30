@@ -20,7 +20,7 @@ int main() {
 
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->Clear();
-    io.Fonts->AddFontFromFileTTF("/app/assets/fonts/NanumGothic.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesKorean());
+    io.Fonts->AddFontFromFileTTF("assets/fonts/NanumGothic.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesKorean());
     ImGui::SFML::UpdateFontTexture();
 
     GameState gs;

@@ -12,9 +12,11 @@ set(IMGUI_DIR      ${CMAKE_SOURCE_DIR}/src/imgui)
 set(IMGUI_SFML_DIR ${CMAKE_SOURCE_DIR}/src/imgui-sfml)
 
 file(GLOB SOURCES "src/*.cpp")
+file(GLOB_RECURSE ASSETS "assets/*")
 
 add_executable(${PROJECT_NAME}
     ${SOURCES}
+    ${ASSETS}
 
     ${IMGUI_DIR}/imgui.cpp
     ${IMGUI_DIR}/imgui_draw.cpp
