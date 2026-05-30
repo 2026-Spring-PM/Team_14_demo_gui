@@ -22,7 +22,8 @@ xhost +local:docker
 docker run --rm \
   -e DISPLAY=$DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
-  ghcr.io/2026-spring-pm/team_14/team14_game:latest
+  ghcr.io/2026-spring-pm/team_14/team14_game:latest \
+  /bin/bash
 ```
 
 ---
