@@ -39,7 +39,8 @@ git submodule update --init --recursive
 ### Build the Image
 
 ```bash
-docker build -t team14_game:latest .
+cd docker
+./docker_build.sh
 ```
 
 ### Tag & Push to GitHub Container Registry

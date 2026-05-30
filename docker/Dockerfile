@@ -18,7 +18,7 @@ RUN git clone --branch 2.6.1 --depth 1 \
     rm -rf /tmp/sfml
 
 WORKDIR /app
-COPY . .
+COPY . /app
 
 RUN rm -rf build && \
     cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && \
