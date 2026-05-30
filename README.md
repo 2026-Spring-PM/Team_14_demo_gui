@@ -28,14 +28,13 @@ docker run --rm \
 
 ---
 
+## Build & Push (For Developers)
 
 ### Git Submodule (Right After Download)
 
 ```bash
 git submodule update --init --recursive
 ```
-
-## Build & Push (For Developers)
 
 ### Build the Image
 
