@@ -17,6 +17,8 @@ public:
     TrapType Type;
     State TrapState;
 
+    bool isAttacking;
+
     Trap();
     Trap(std::string name, int price, int atk, int cooldown, std::pair<int, int> Pos, std::pair<int, int> range, TrapType type);
 
@@ -29,19 +31,29 @@ public:
 };
 
 Trap::Trap()
-: Name(""), Price(0), Atk(0), CoolDown(0), Timer(0), Pos({0, 0}), Range({0,0}), Type(TrapType::NONE), TrapState(State::NONE) {}
+: Name(""), Price(0), Atk(0), CoolDown(0), Timer(0), Pos({0, 0}), Range({0,0}), Type(TrapType::NONE), TrapState(State::NONE), isAttacking(false) {}
 
 Trap::Trap(std::string name, int price, int atk, int cooldown, std::pair<int, int> pos, std::pair<int, int> range, TrapType type)
-: Name(name), Price(price), Atk(atk), CoolDown(cooldown), Timer(0), Pos(pos), Range(range), Type(type), TrapState(State::ALIVE) {}
+: Name(name), Price(price), Atk(atk), CoolDown(cooldown), Timer(0), Pos(pos), Range(range), Type(type), TrapState(State::ALIVE), isAttacking(false) {}
 
 void Trap::Attack(std::vector<Enemy> &ActiveEnemies) {
     UpdateTimer();
+
+    isAttacking = false;
+    for (auto& enemy : ActiveEnemies) {
+        if (enemy.EnemyState == State::ALIVE && InRange(enemy)) {
+            isAttacking = true;
+            break;
+        }
+    }
+
     if (Timer == CoolDown) {
         std::sort(ActiveEnemies.begin(), ActiveEnemies.end());
         for (auto& enemy : ActiveEnemies) {
             if (InRange(enemy)) {
                 enemy.TakeDamage(Atk); // 범위 공격 시 하나만 공격하게 바꿈
-                break;
+                
+		break;
             }
         }
         Timer = 0;
@@ -60,3 +72,5 @@ bool Trap::InRange(Enemy& enemy) {
     // TODO: UI 구현후, 구현된 화면에 따라 범위에 들어오는 것을 체크
     return true;
 }
+
+

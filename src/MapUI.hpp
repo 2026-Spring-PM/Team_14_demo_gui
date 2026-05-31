@@ -199,8 +199,10 @@ private:
                         }
                     } 
                     else if (tileType == 0 && gs->farm.TrapField[r][c] != nullptr) {
-                        TrapType tType = gs->farm.TrapField[r][c]->Type;
+                        auto trap = gs->farm.TrapField[r][c]; // 함정 데이터 포인터
+                        TrapType tType = trap->Type;
                         sf::Texture* tTex = nullptr;
+                        
                         if (tType == TrapType::ANIMAL1) tTex = const_cast<sf::Texture*>(&gs->cowTrapTexture);
                         else if (tType == TrapType::ANIMAL2) tTex = const_cast<sf::Texture*>(&gs->pigTrapTexture);
                         else if (tType == TrapType::ANIMAL3) tTex = const_cast<sf::Texture*>(&gs->horseTrapTexture);
@@ -208,6 +210,16 @@ private:
                         if (tTex) {
                             sf::Sprite tSprite(*tTex);
                             float trapScale = 0.8f;
+
+                            // 공격 중일 때 계속 커졌다 작아졌다 반복 ---
+                            if (trap->isAttacking) {
+                                int timeTick = static_cast<int>(ImGui::GetTime() * 8.0f); 
+                                if (timeTick % 2 == 0) {
+                                    trapScale = 0.95f; // 커짐
+                                } else {
+                                    trapScale = 0.8f;  // 작아짐 (원래 크기)
+                                }
+                            }
                             tSprite.setScale({(tileWidth / tTex->getSize().x) * trapScale, (tileHeight / tTex->getSize().y) * trapScale});
                             
                             float offsetX = tileWidth * (1.0f - trapScale) / 2.0f;
@@ -217,7 +229,6 @@ private:
                             ImGui::Image(tSprite);
                         }
                     }
-
                     bool canInstall = false;
                     if (tileType == 1 && gs->selectedSeed != SeedType::NONE && gs->farm.SeedField[r][c] == nullptr) {
                         canInstall = true;
