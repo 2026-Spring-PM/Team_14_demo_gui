@@ -5,25 +5,25 @@ A C++ game project built with SDL/SFML, distributed via Docker with GUI support.
 ## Getting Started
 
 ### 1. Pull the Image
-'''
+```
 docker pull ghcr.io/2026-spring-pm/team_14/team_14_project:demo
-'''
+```
 
 ### 2. Run the app
 Option A - Run automatically:
-'''
+```
 bash scripts/docker_run.sh
-'''
-This starts the container and immediately launches '''build/team14_game'''.
+```
+This starts the container and immediately launches ```build/team14_game```.
 
 Option B - Enter the container first, then run manually:
-'''
+```
 bash scripts/docker_run_shell.sh
-'''
+```
 This starts the container and drops you into a bash shell. From inside the container, you can run the app yourself:
-'''
+```
 ./build/team14_game
-'''
+```
 
 ## Game System
 
