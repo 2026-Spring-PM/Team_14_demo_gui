@@ -113,8 +113,10 @@ public:
 
         if (ImGui::Button("계속하기", bSz)) {
             const_cast<GameState*>(gs)->TransitionToDay();
+
         }
-        ImGui::End();
         ImGui::PopStyleColor(); 
+        ImGui::End();
+        
     }
 };

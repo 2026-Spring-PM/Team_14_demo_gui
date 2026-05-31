@@ -177,7 +177,7 @@ void Farm::SpawnEnemies(int NightElapsedMinutes) {
 }
 
 void Farm::AddEnemies(int Level, NightType night) {
-    int enemycount = EnemyCount(Level);
+    /*int enemycount = EnemyCount(Level);
 
     for(int i = 0; i < enemycount; i++) {
         EnemyType type = EnemyTypeSet(Level);
@@ -189,6 +189,7 @@ void Farm::AddEnemies(int Level, NightType night) {
         newEnemy.SpawnDelay = SpawnDelay(night);
         PendingEnemies.push_back(newEnemy);
     }
+        */
 }
 
 void Farm::UpdateEnemies(Status &status, Inventory &inventory) {

@@ -119,7 +119,7 @@ void GameState::Update() {
         farm.UpdateEnemies(status, inventory);
         // farm.UpdateFarms(); 밤에도 작동시키고 싶으면 주석 제거
 
-        if (farm.EnemiesEmpty()||NightElapsedMinutes >= 720){
+        if (farm.EnemiesEmpty()&&NightElapsedMinutes >= 720){
             status=Status::SETTLEMENT;
         }
         
@@ -190,6 +190,8 @@ void GameState::Reset() {
     inventory.TrapCount[TrapType::ANIMAL2] = 1;
     inventory.TrapCount[TrapType::ANIMAL3] = 1;
     farm = Farm();
+    farm.ActiveEnemies.clear();
+    farm.PendingEnemies.clear();
 
 }
 void GameState::LoadAllTextures() {

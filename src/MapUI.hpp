@@ -169,8 +169,10 @@ private:
                                 }
 
                                 if (ImGui::IsItemClicked()) {
-                                    const_cast<GameState*>(gs)->farm.WaterSeed(r,c);
-                                    const_cast<GameState*>(gs)->Update();
+                                    if(gs->status==Status::AM){
+                                        const_cast<GameState*>(gs)->farm.WaterSeed(r,c);
+                                        const_cast<GameState*>(gs)->Update();
+                                    }
                                 }
                             }
 

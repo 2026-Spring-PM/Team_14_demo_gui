@@ -71,8 +71,8 @@ private:
         sprintf(sTxt, "재생속도(%dx)", gs->PlaybackSpeed);
         if (ImGui::Button(sTxt, {130, 40})) {
             const_cast<GameState*>(gs)->Update();
-            int nextSpeed = gs->PlaybackSpeed + 1;
-            if (nextSpeed > 3) {
+            int nextSpeed = gs->PlaybackSpeed*2;
+            if (nextSpeed > 8) {
                 nextSpeed = 1;
             }
             const_cast<GameState*>(gs)->ChangePlaybackSpeed(nextSpeed);
