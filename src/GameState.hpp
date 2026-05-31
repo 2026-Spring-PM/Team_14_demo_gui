@@ -92,6 +92,7 @@ void GameState::ChangePlaybackSpeed(int speed) {
 void GameState::Update() {
     
     if (status == Status::AM) {
+        if (showNightAlert) return;
         if(farm.Hour >= 18){
             showNightAlert=true;
             MoneyBefore=Money;

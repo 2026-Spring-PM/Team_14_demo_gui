@@ -47,7 +47,6 @@ public:
         ImGui::Spacing();
 
         char trapTxt[128];
-        // TODO: 보유 개수를 관리하는 실제 변수로 수정 
         sprintf(trapTxt, "함정 : 소 x %d, 돼지 x %d, 말 x %d", gs->inventory.TrapCount.at(TrapType::COW)
         ,gs->inventory.TrapCount.at(TrapType::PIG),gs->inventory.TrapCount.at(TrapType::HORSE)); 
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(trapTxt).x) * 0.5f);
@@ -56,7 +55,7 @@ public:
         ImGui::Spacing();
 
         char seedTxt[128];
-        // TODO: 보유 개수를 관리하는 실제 변수로 수정.
+
         sprintf(seedTxt, "씨앗 : 밀 x %d, 감자 x %d, 당근 x %d",
                 gs->inventory.SeedCount.at(SeedType::WHEAT), 
                 gs->inventory.SeedCount.at(SeedType::POTATO), 

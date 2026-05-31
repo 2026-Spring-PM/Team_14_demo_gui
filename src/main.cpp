@@ -75,6 +75,10 @@ int main() {
                 }
             }
         }
+        //밤일 떄는 떄로 업데이트를 해야함
+        if (gs.status == Status::PM) {
+            gs.Update();
+        }
 
         for (auto& enemy : gs.farm.ActiveEnemies) {
             enemy.Move(deltaTime);
