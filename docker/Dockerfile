@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:24.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -17,6 +17,7 @@ RUN git clone --branch 2.6.1 --depth 1 \
     cmake --install /tmp/sfml/build && \
     rm -rf /tmp/sfml
 
+FROM base AS builder
 WORKDIR /app
 COPY . /app
 
@@ -24,4 +25,13 @@ RUN rm -rf build && \
     cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && \
     cmake --build build -j$(nproc)
 
+FROM base AS demo
+WORKDIR /app
+
+COPY --from=builder /app/build/team14_game ./build/team14_game
+COPY --from=builder /app/assets ./assets
+
+CMD ["./build/team14_game"]
+
+FROM builder AS workspace
 CMD ["./build/team14_game"]
