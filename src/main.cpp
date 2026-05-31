@@ -14,7 +14,7 @@
 #include "DaySettlementUI.hpp"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Team14 Game");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Team14 Game", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60); 
     ImGui::SFML::Init(window);
 

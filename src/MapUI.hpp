@@ -274,14 +274,36 @@ private:
                                 mgs->selectedTrap = TrapType::NONE;
                             }
                         }
-                        if (isHovered && tileType == 0) {
-                            if ((mgs->selectedTrap != TrapType::NONE && mgs->farm.TrapField[r][c] == nullptr) || 
-                                (mgs->farm.TrapField[r][c] != nullptr)) {
-                                
+			if (isHovered && tileType == 0) {
+                            TrapType activeTrap = TrapType::NONE;
+                            
+                            if (mgs->farm.TrapField[r][c] != nullptr) {
+                                activeTrap = mgs->farm.TrapField[r][c]->Type;
+                            } else if (mgs->selectedTrap != TrapType::NONE) {
+                                activeTrap = mgs->selectedTrap;
+                            }
+
+                            if (activeTrap != TrapType::NONE) {
                                 drawDeferredHover = true;
-                                //TODO : 임시 범위 설정. 수정 필요.
-                                deferredRangeMin = {screenPos.x - tileWidth, screenPos.y};
-                                deferredRangeMax = {screenPos.x + (tileWidth * 2.0f), screenPos.y + (tileHeight * 2.0f)};
+                                bool isBelowRoad = (r > 2); 
+
+                                if (activeTrap == TrapType::ANIMAL2) { 
+                                    if (isBelowRoad) {
+                                        deferredRangeMin = {screenPos.x - (tileWidth * 2.0f), screenPos.y - tileHeight};
+                                        deferredRangeMax = {screenPos.x + (tileWidth * 3.0f), screenPos.y + (tileHeight * 2.0f)};
+                                    } else {
+                                        deferredRangeMin = {screenPos.x - (tileWidth * 2.0f), screenPos.y};
+                                        deferredRangeMax = {screenPos.x + (tileWidth * 3.0f), screenPos.y + (tileHeight * 3.0f)};
+                                    }
+                                } else if (activeTrap == TrapType::ANIMAL1 || activeTrap == TrapType::ANIMAL3) { 
+                                    if (isBelowRoad) {
+                                        deferredRangeMin = {screenPos.x - tileWidth, screenPos.y - tileHeight};
+                                        deferredRangeMax = {screenPos.x + (tileWidth * 2.0f), screenPos.y + tileHeight};
+                                    } else {
+                                        deferredRangeMin = {screenPos.x - tileWidth, screenPos.y};
+                                        deferredRangeMax = {screenPos.x + (tileWidth * 2.0f), screenPos.y + (tileHeight * 2.0f)};
+                                    }
+                                }
                             }
 
                             if (mgs->selectedTrap != TrapType::NONE && mgs->farm.TrapField[r][c] == nullptr) {
@@ -305,8 +327,7 @@ private:
                         ImGui::Dummy({tileWidth, tileHeight});
                     }
                 }
-
-                ImGui::PopID();
+		ImGui::PopID();
 
                 if (c < 8) ImGui::SameLine();
             }
