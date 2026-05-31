@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libvorbis-dev libflac-dev \
     libudev-dev libgl1-mesa-dev \
     libx11-dev libxrandr-dev libxcursor-dev \
+    alsa-utils libasound2t64 libasound2-plugins \
     && rm -rf /var/lib/apt/lists/*
 
 RUN git clone --branch 2.6.1 --depth 1 \
@@ -30,7 +31,6 @@ WORKDIR /app
 
 COPY --from=builder /app/build/team14_game ./build/team14_game
 COPY --from=builder /app/assets ./assets
-COPY scripts/ ./scripts/
 
 CMD ["./build/team14_game"]
 

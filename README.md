@@ -46,7 +46,7 @@ cd docker
 ### Tag & Push to GitHub Container Registry
 
 ```bash
-docker tag team14_game:latest ghcr.io/2026-spring-pm/team_14/team14_project:demo
+docker tag team14_project:demo ghcr.io/2026-spring-pm/team_14/team14_project:demo
 docker push ghcr.io/2026-spring-pm/team_14/team14_project:demo
 ```
 
