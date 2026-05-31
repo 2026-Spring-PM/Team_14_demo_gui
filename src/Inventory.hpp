@@ -8,6 +8,9 @@ public:
     std::map<TrapType, int> TrapCount;
     int Bullets;
     int BulletsBefore;
+    int seedsumbefore;
+    int trapsumbefore;
+    
 
     Inventory();
 
@@ -18,7 +21,7 @@ public:
     bool UseTrap(TrapType type, int amount);
 };
 
-Inventory::Inventory() : Bullets(5),BulletsBefore(5) {
+Inventory::Inventory() : Bullets(5),BulletsBefore(5),seedsumbefore(3),trapsumbefore(3) {
     SeedCount[SeedType::NONE] = 0;
     TrapCount[TrapType::NONE] = 0;
 }

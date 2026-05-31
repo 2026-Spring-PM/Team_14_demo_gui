@@ -71,28 +71,26 @@ public:
         char trapTxt[128];
         char trapDiff[10];
         int trapsum=gs->inventory.TrapCount.at(TrapType::COW)+gs->inventory.TrapCount.at(TrapType::PIG)+gs->inventory.TrapCount.at(TrapType::HORSE);
-        if (trapsum > 0) {
-            snprintf(trapDiff, sizeof(trapDiff), "+%d", trapsum);
+        if (trapsum-gs->inventory.trapsumbefore > 0) {
+            snprintf(trapDiff, sizeof(trapDiff), "+%d", trapsum-gs->inventory.trapsumbefore);
         } 
         else {
-            snprintf(trapDiff, sizeof(trapDiff), "%d", trapsum);
+            snprintf(trapDiff, sizeof(trapDiff), "%d", trapsum-gs->inventory.trapsumbefore);
         }
         sprintf(trapTxt, "함정 : 소 x %d, 돼지 x %d, 말 x %d (%s)",gs->inventory.TrapCount.at(TrapType::COW),gs->inventory.TrapCount.at(TrapType::PIG),gs->inventory.TrapCount.at(TrapType::HORSE),trapDiff);
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - ImGui::CalcTextSize(trapTxt).x) * 0.5f);
         ImGui::Text("%s", trapTxt);
 
         ImGui::Spacing();
-
         char seedTxt[128];
         char seedDiff[10];
-
         int seedsum = gs->inventory.SeedCount.at(SeedType::WHEAT) + gs->inventory.SeedCount.at(SeedType::POTATO) + gs->inventory.SeedCount.at(SeedType::CARROT);
 
-        if (seedsum > 0) {
-            snprintf(seedDiff, sizeof(seedDiff), "+%d", seedsum);
+        if (seedsum-gs->inventory.seedsumbefore > 0) {
+            snprintf(seedDiff, sizeof(seedDiff), "+%d", seedsum-gs->inventory.seedsumbefore);
         } 
         else {
-            snprintf(seedDiff, sizeof(seedDiff), "%d", seedsum);
+            snprintf(seedDiff, sizeof(seedDiff), "%d", seedsum-gs->inventory.seedsumbefore);
         }
 
         sprintf(seedTxt, "씨앗 : 밀 x %d, 감자 x %d, 당근 x %d (%s)", 
@@ -112,6 +110,10 @@ public:
         ImGui::SetCursorPosX((ImGui::GetWindowSize().x - bSz.x) * 0.5f);
 
         if (ImGui::Button("계속하기", bSz)) {
+            const_cast<GameState*>(gs)->MoneyBefore=gs->Money;
+            const_cast<GameState*>(gs)->inventory.BulletsBefore=gs->inventory.Bullets;
+            const_cast<GameState*>(gs)->inventory.seedsumbefore=seedsum;
+            const_cast<GameState*>(gs)->inventory.trapsumbefore=trapsum;
             const_cast<GameState*>(gs)->TransitionToDay();
 
         }
