@@ -95,8 +95,6 @@ void GameState::Update() {
         if (showNightAlert) return;
         if(farm.Hour >= 18){
             showNightAlert=true;
-            MoneyBefore=Money;
-            inventory.BulletsBefore=inventory.Bullets;
         }
         else {
             farm.UpdateFarms();
