@@ -1,35 +1,70 @@
 #pragma once
 #include <cmath>
 #include <cstdlib>
-
 #include "Enums.hpp"
+#include "GameData.hpp"
 
-// TODO: Enemy 함수 세부 구현 필요!
-// EnemyType는 level이 올라감에 따라 어려운 적 많이 나오게
-// EnemyType 및 level에 따라 및의 함수들은 다른 값을 return 하도록 만들기.
-
-int EnemyCount(int level) {
+inline int EnemyCount(int level) {
     return static_cast<int>(std::sqrt(level)) + 10;
 }
 
-EnemyType EnemyTypeSet(int level) {
-    return EnemyType::NONE;
+inline EnemyType EnemyTypeSet(int level) {
+    int randVal = std::rand() % 100;
+
+    if (level <= 3) {
+        if (randVal < 70) return EnemyType::ENEMY1;
+        else return EnemyType::ENEMY2; // 기존 RAT에서 ENEMY2로 수정
+    }
+    else if (level <= 7) {
+        if (randVal < 30) return EnemyType::ENEMY1;
+        if (randVal < 85) return EnemyType::ENEMY2;
+        else return EnemyType::ENEMY3;
+    }
+    else {
+        if (randVal < 10) return EnemyType::ENEMY1;
+        if (randVal < 50) return EnemyType::ENEMY2;
+        else return EnemyType::ENEMY3;
+    }
 }
 
-int EnemySpeed(int level, EnemyType type) {
-    return 1111; // TODO: 구현
+inline int EnemySpeed(int level, EnemyType type) {
+    int baseSpeed = 10;
+    
+    switch (type) {
+        case EnemyType::ENEMY1: baseSpeed = 15; break; 
+        case EnemyType::ENEMY2: baseSpeed = 10; break;
+        case EnemyType::ENEMY3: baseSpeed = 12; break;
+        // 기존 RAT 케이스 삭제 완료
+        default: break;
+    }
+
+    return baseSpeed + (level / 2);
 }
 
-int EnemyHealthPoint(int level, EnemyType type) {
-    return 1111; // TODO: 구현
+inline int EnemyHealthPoint(int level, EnemyType type) {
+    int baseHP = 10;
+
+    auto it = GameData::EnemyTable.find(type);
+    if (it != GameData::EnemyTable.end()) {
+        baseHP = it->second.HP;
+    }
+
+    return baseHP + ((level - 1) * 5);
 }
 
-int EnemyCoolDown(int level, EnemyType type) {
-    return 1111; // TODO: 구현 또는 빼기
+inline int EnemyCoolDown(int level, EnemyType type) {
+    int baseCoolDown = 50;
+
+    auto it = GameData::EnemyTable.find(type);
+    if (it != GameData::EnemyTable.end()) {
+        baseCoolDown = it->second.CoolDown;
+    }
+
+    int finalCoolDown = baseCoolDown - (level * 2);
+    return finalCoolDown < 10 ? 10 : finalCoolDown;
 }
 
-int SpawnDelay(NightType type) {
-    // TODO: EARLY와 LATE가 다른 분포를 따르도록 변경
+inline int SpawnDelay(NightType type) {
     int delay = 0;
 
     switch (type) {
@@ -47,20 +82,14 @@ int SpawnDelay(NightType type) {
     return delay;
 }
 
-NightType SetNightType() {
+inline NightType SetNightType() {
     int mode = std::rand() % 6;
     NightType type;
 
     switch (mode) {
-        case 0:
-            type = NightType::EARLY;
-            break;
-        case 5:
-            type = NightType::LATE;
-            break;
-        default:
-            type = NightType::NORMAL;
-            break;
+        case 0:  type = NightType::EARLY; break;
+        case 5:  type = NightType::LATE;  break;
+        default: type = NightType::NORMAL; break;
     }
 
     return type;

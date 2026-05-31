@@ -40,7 +40,6 @@ enum class TrapType {
 };
 enum class EnemyType {
     NONE,
-    ENEMY1,
-    ENEMY2,
+    ENEMY1,ENEMY2,ENEMY3,
     // TODO: 이름 변경 및 추가
 };
