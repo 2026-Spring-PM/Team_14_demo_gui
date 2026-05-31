@@ -9,11 +9,11 @@ echo "▶ Detecting Operating System for Docker GUI Forwarding..."
 # Windows (WSL2)
 if [ -f /proc/version ] && grep -qi microsoft /proc/version; then
     echo "OS Detected: Windows (WSL2)"
+    
     docker run -it --rm \
       -e DISPLAY=$DISPLAY \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
       -v /mnt/wslg:/mnt/wslg \
-      -v /usr/lib/wsl/drivers:/usr/lib/wsl/drivers \
       -e PULSE_SERVER=unix:/mnt/wslg/runtime-dir/pulse/native \
       --ipc=host \
       "$IMAGE_NAME:$TAG" bash
@@ -30,6 +30,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     echo "OS Detected: Linux"
     xhost +local:docker
+    
     docker run -it --rm \
       -e DISPLAY=$DISPLAY \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
