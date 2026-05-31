@@ -9,7 +9,7 @@ echo "▶ Detecting Operating System for Docker GUI Forwarding..."
 # Windows (WSL2)
 if [ -f /proc/version ] && grep -qi microsoft /proc/version; then
     echo "OS Detected: Windows (WSL2)"
-    
+    xhost +localhost
     docker run -it --rm \
       -e DISPLAY=$DISPLAY \
       -e PULSE_SERVER=unix:/mnt/wslg/PulseServer \
