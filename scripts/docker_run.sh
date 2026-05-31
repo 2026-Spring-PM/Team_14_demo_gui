@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-IMAGE_NAME="team14_project"
+IMAGE_NAME="team_14_project"
 TAG="demo"
 
 echo "▶ Detecting Operating System for Docker GUI Forwarding..."
@@ -12,11 +12,12 @@ if [ -f /proc/version ] && grep -qi microsoft /proc/version; then
     
     docker run -it --rm \
       -e DISPLAY=$DISPLAY \
+      -e PULSE_SERVER=unix:/mnt/wslg/PulseServer \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
       -v /mnt/wslg:/mnt/wslg \
       -e PULSE_SERVER=unix:/mnt/wslg/runtime-dir/pulse/native \
       --ipc=host \
-      "$IMAGE_NAME:$TAG"
+      "$IMAGE_NAME:$TAG" bash
 
 # macOS
 elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -24,7 +25,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     xhost +localhost
     docker run -it --rm \
       -e DISPLAY=host.docker.internal:0 \
-      "$IMAGE_NAME:$TAG"
+      "$IMAGE_NAME:$TAG" bash
 
 # Linux
 elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -38,7 +39,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
       --device /dev/snd \
       --group-add audio \
       --ipc=host \
-      "$IMAGE_NAME:$TAG"
+      "$IMAGE_NAME:$TAG" bash
 
 # 4. Windows (Git Bash)
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
@@ -54,9 +55,9 @@ elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
       -v /mnt/wslg:/mnt/wslg \
       -e PULSE_SERVER=unix:/mnt/wslg/runtime-dir/pulse/native \
       --ipc=host \
-      "$IMAGE_NAME:$TAG"
+      "$IMAGE_NAME:$TAG" bash
 
 else
     echo "Unknown OS type ($OSTYPE). Trying default docker run..."
-    docker run -it --rm --ipc=host "$IMAGE_NAME:$TAG"
+    docker run -it --rm --ipc=host "$IMAGE_NAME:$TAG" bash
 fi

@@ -6,7 +6,7 @@ A C++ game project built with SDL/SFML, distributed via Docker with GUI support.
 
 ### 1. Pull the Image
 ```
-docker pull ghcr.io/2026-spring-pm/team_14/team_14_project:demo
+docker pull ghcr.io/2026-spring-pm/team_14/team14_project:0.1.0
 ```
 
 ### 2. Run the app

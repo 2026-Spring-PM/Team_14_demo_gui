@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-IMAGE_NAME="team14_project"
+IMAGE_NAME="team_14_project"
 TAG="demo"
 
 echo "▶ Detecting Operating System for Docker GUI Forwarding..."
@@ -12,6 +12,7 @@ if [ -f /proc/version ] && grep -qi microsoft /proc/version; then
     
     docker run -it --rm \
       -e DISPLAY=$DISPLAY \
+      -e PULSE_SERVER=unix:/mnt/wslg/PulseServer \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
       -v /mnt/wslg:/mnt/wslg \
       -e PULSE_SERVER=unix:/mnt/wslg/runtime-dir/pulse/native \
