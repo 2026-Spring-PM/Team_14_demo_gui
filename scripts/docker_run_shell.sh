@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-IMAGE_NAME="team_14_project"
-TAG="demo"
+IMAGE_NAME="team14_project"
+TAG="0.1.0"
 
 echo "▶ Detecting Operating System for Docker GUI Forwarding..."
 
@@ -15,8 +15,6 @@ if [ -f /proc/version ] && grep -qi microsoft /proc/version; then
       -e PULSE_SERVER=unix:/mnt/wslg/PulseServer \
       -v /tmp/.X11-unix:/tmp/.X11-unix \
       -v /mnt/wslg:/mnt/wslg \
-      -e PULSE_SERVER=unix:/mnt/wslg/runtime-dir/pulse/native \
-      --ipc=host \
       "$IMAGE_NAME:$TAG" bash
 
 # macOS
