@@ -2,6 +2,8 @@
 
 A C++ game project built with SDL/SFML, distributed via Docker with GUI support.
 
+---
+
 ## Getting Started
 
 ### 1. Pull the Image
@@ -24,6 +26,7 @@ This starts the container and drops you into a bash shell. From inside the conta
 ```
 ./build/team14_game
 ```
+---
 
 ## Game System
 
