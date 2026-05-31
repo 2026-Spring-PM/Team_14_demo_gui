@@ -30,6 +30,7 @@ WORKDIR /app
 
 COPY --from=builder /app/build/team14_game ./build/team14_game
 COPY --from=builder /app/assets ./assets
+COPY scripts/ ./scripts/
 
 CMD ["./build/team14_game"]
 

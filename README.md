@@ -7,7 +7,7 @@ A C++ game project built with SDL/SFML, distributed via Docker with GUI support.
 ### 1. Pull the Image
 
 ```bash
-docker pull ghcr.io/2026-spring-pm/team_14/team14_game:latest
+docker pull ghcr.io/2026-spring-pm/team_14/team14_project:demo
 ```
 
 ### 2. Allow X11 Display Access
@@ -22,7 +22,7 @@ xhost +local:docker
 docker run --rm \
   -e DISPLAY=$DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
-  ghcr.io/2026-spring-pm/team_14/team14_game:latest \
+  ghcr.io/2026-spring-pm/team_14/team14_project:demo \
   /bin/bash
 ```
 
@@ -46,8 +46,8 @@ cd docker
 ### Tag & Push to GitHub Container Registry
 
 ```bash
-docker tag team14_game:latest ghcr.io/2026-spring-pm/team_14/team14_game:latest
-docker push ghcr.io/2026-spring-pm/team_14/team14_game:latest
+docker tag team14_game:latest ghcr.io/2026-spring-pm/team_14/team14_project:demo
+docker push ghcr.io/2026-spring-pm/team_14/team14_project:demo
 ```
 
 > **Note:**
