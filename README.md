@@ -12,13 +12,13 @@ docker pull ghcr.io/2026-spring-pm/team_14/team14_project:0.1.0
 ```
 
 ### 2. Run the app
-Option A - Run automatically:
+**Option A** - Run automatically:
 ```
 bash scripts/docker_run.sh
 ```
 This starts the container and immediately launches ```build/team14_game```.
 
-Option B - Enter the container first, then run manually:
+**Option B** - Enter the container first, then run manually:
 ```
 bash scripts/docker_run_shell.sh
 ```
