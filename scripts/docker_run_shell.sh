@@ -56,6 +56,5 @@ elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
       "$IMAGE_NAME:$TAG" bash
 
 else
-    echo "Unknown OS type ($OSTYPE). Trying default docker run..."
-    docker run -it --rm --ipc=host "$IMAGE_NAME:$TAG" bash
+    echo "Unavailable OS type ($OSTYPE). Please Try Again With WSL2 or MacOS or Linux"
 fi

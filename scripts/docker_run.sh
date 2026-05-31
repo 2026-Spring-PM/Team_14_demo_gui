@@ -38,22 +38,6 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
       --group-add audio \
       "$IMAGE_NAME:$TAG"
 
-# 4. Windows (Git Bash)
-elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-    echo "OS Detected: Windows (Git Bash)"
-
-    IP=$(powershell.exe -Command "(Get-NetIPAddress -InterfaceAlias 'vEthernet (WSL)' | Select-Object -First 1).IPAddress" 2>/dev/null | tr -d '\r')
-    if [ -z "$IP" ]; then
-        IP=$(ipconfig.exe | grep -i "IPv4" | head -n 1 | awk -F': ' '{print $2}' | tr -d '\r')
-    fi
-    
-    docker run -it --rm \
-      -e DISPLAY="${IP}:0" \
-      -v /mnt/wslg:/mnt/wslg \
-      -e PULSE_SERVER=unix:/mnt/wslg/PulseServer \
-      "$IMAGE_NAME:$TAG"
-
 else
-    echo "Unknown OS type ($OSTYPE). Trying default docker run..."
-    docker run -it --rm --ipc=host "$IMAGE_NAME:$TAG" bash
+    echo "Unavailable OS type ($OSTYPE). Please Try Again With WSL2 or MacOS or Linux"
 fi
