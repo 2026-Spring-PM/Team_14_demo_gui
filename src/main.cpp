@@ -52,11 +52,11 @@ int main() {
                 if (event.key.code == sf::Keyboard::Num0) gs.status = Status::MAIN;
                 if (event.key.code == sf::Keyboard::Num1) {
                     gs.farm.Hour = 8;
-                    gs.status = Status::AM;
+		    gs.TransitionToDay();
                 }
                 if (event.key.code == sf::Keyboard::Num2) {
                     gs.farm.Hour = 20;
-                    gs.status = Status::PM;
+		    gs.TransitionToNight();
                 }
                 if (event.key.code == sf::Keyboard::Num3) gs.status = Status::SHOP;
                 if (event.key.code == sf::Keyboard::Num4) gs.status = Status::PAUSE;

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include "Enums.hpp"
 #include "Enemy.hpp"
@@ -79,6 +80,8 @@ public:
     sf::Texture stoneTexture;
     sf::Texture rouletteTexture;
     sf::Texture thiefTexture;
+
+    sf::Music bgm;
 };
 
 GameState::GameState() : status(Status::MAIN), Level(1), NightElapsedMinutes(0), Money(100), MoneyBefore(100), 
@@ -140,6 +143,8 @@ bool GameState::CanPlayMiniGame() {
 void GameState::TransitionToNight() {
     status = Status::PM;
 
+    PlayBGM(Status::PM);
+
     farm.TriggerNightRandomEvent();
     NightElapsedMinutes = 0;
     night = SetNightType();
@@ -152,6 +157,9 @@ RandomEvent GameState::TransitionToDay() {
     MoneyBefore=Money;
     inventory.BulletsBefore=inventory.Bullets;
     status = Status::AM;
+
+    PlayBGM(Status::AM);
+
     Level++;
     farm.TriggerDayRandomEvent();
 
@@ -162,7 +170,29 @@ RandomEvent GameState::TransitionToDay() {
 }
 
 void GameState::PlayBGM(Status currentStatus) {
-    // TODO: Audio 재생 함수 구현. 상태에 따라 다른 음악 재생할 것.
+   if (bgm.getStatus() == sf::Music::Playing) {
+        bgm.stop();
+    } 
+
+    std::string musicPath = "";
+    
+    if (currentStatus == Status::MAIN) {
+        musicPath = "assets/music/MainBGM.mp3";  
+    } else if (currentStatus == Status::AM) {
+        musicPath = "assets/music/DayBGM.mp3";  
+    } else if (currentStatus == Status::PM) {
+        musicPath = "assets/music/NightBGM.mp3"; 
+    } 
+    
+    if (!musicPath.empty()) {
+        if (bgm.openFromFile(musicPath)) {
+            bgm.setLoop(true);
+            bgm.setVolume(50.f);
+            bgm.play(); 
+        } else {
+            std::cerr << "파일 열기 실패: " << musicPath << std::endl;
+        }
+    }    
 }
 void GameState::Reset() {
     status = Status::MAIN;
@@ -191,6 +221,7 @@ void GameState::Reset() {
     farm.ActiveEnemies.clear();
     farm.PendingEnemies.clear();
 
+    PlayBGM(Status::MAIN);
 }
 void GameState::LoadAllTextures() {
     if (!houseTexture.loadFromFile("assets/image/House.png")) {
