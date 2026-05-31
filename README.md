@@ -5,61 +5,38 @@ A C++ game project built with SDL/SFML, distributed via Docker with GUI support.
 ## Getting Started
 
 ### 1. Pull the Image
+'''
+docker pull ghcr.io/2026-spring-pm/team_14/team_14_project:demo
+'''
 
-```bash
-docker pull ghcr.io/2026-spring-pm/team_14/team14_project:demo
-```
+### 2. Run the app
+Option A - Run automatically:
+'''
+bash scripts/docker_run.sh
+'''
+This starts the container and immediately launches '''build/team14_game'''.
 
-### 2. Allow X11 Display Access
+Option B - Enter the container first, then run manually:
+'''
+bash scripts/docker_run_shell.sh
+'''
+This starts the container and drops you into a bash shell. From inside the container, you can run the app yourself:
+'''
+./build/team14_game
+'''
 
-```bash
-xhost +local:docker
-```
+## Game System
 
-### 3. Run the Game
-
-```bash
-docker run --rm \
-  -e DISPLAY=$DISPLAY \
-  -v /tmp/.X11-unix:/tmp/.X11-unix \
-  ghcr.io/2026-spring-pm/team_14/team14_project:demo \
-  /bin/bash
-```
+NOT DONE YET
 
 ---
-
-## Build & Push (For Developers)
-
-### Git Submodule (Right After Download)
-
-```bash
-git submodule update --init --recursive
-```
-
-### Build the Image
-
-```bash
-cd docker
-./docker_build.sh
-```
-
-### Tag & Push to GitHub Container Registry
-
-```bash
-docker tag team14_project:demo ghcr.io/2026-spring-pm/team_14/team14_project:demo
-docker push ghcr.io/2026-spring-pm/team_14/team14_project:demo
-```
-
-> **Note:**
-> You must be authenticated with `docker login ghcr.io` before pushing.
 
 ## Project Structure
 
 ```
 .
-├── Dockerfile
-├── src/          # C++ 소스 코드
 ├── assets/       # 게임 리소스 (이미지, 사운드 등)
+├── scripts/      # Docker 실행용 스크립트
 └── README.md
 ```
 
