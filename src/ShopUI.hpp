@@ -174,6 +174,7 @@ public:
         
         if (ImGui::Button("룰렛 돌리기\n10$", {250.0f, 60.0f})) { 
             // TODO: 룰렛 동작 로직 연결
+            const_cast<GameState*>(gs)->CanPlayMiniGame();
         }
         ImGui::PopStyleColor(4);
 

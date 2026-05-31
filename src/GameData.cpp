@@ -19,4 +19,7 @@ const std::map<TrapType, TrapData> GameData::TrapTable = {
 const std::map<EnemyType, EnemyData> GameData::EnemyTable = {
     // TODO: 기획에 맞춰 새 함정 수치 추가
     // {EnemyType::Bandit, {10, 100}} 등
+    {EnemyType::ENEMY1,   {.HP = 10,   .CoolDown = 40}},
+    {EnemyType::ENEMY2,   {.HP = 15, .CoolDown=80}}
+
 };
