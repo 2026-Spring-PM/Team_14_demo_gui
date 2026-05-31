@@ -10,7 +10,7 @@
 #include "GameData.hpp"
 #include "Inventory.hpp"
 
-template <typename ObjectType, typename DataType, typename EnumType>
+template <typename ObjectType, typename DataType, typename EnumType>    
 ObjectType* CreateFieldObject(const DataType& data, EnumType type, std::pair<int, int> pos = {0,0}) {
     if constexpr (std::is_same_v<ObjectType, Seed>) {
         return new Seed(data.Name, data.Price, data.Value, data.CoolDown, type);

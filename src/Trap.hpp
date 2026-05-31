@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <utility>
+#include <algorithm>
 #include "Enums.hpp"
 #include "Enemy.hpp"
 
@@ -22,8 +23,9 @@ public:
     void Attack(std::vector<Enemy> &ActiveEnemies);
     void UpdateTimer();
     void Breakdown();
-    void FeedSeed();
     bool InRange(Enemy& enemy);
+
+    friend class Farm;
 };
 
 Trap::Trap()
@@ -35,8 +37,12 @@ Trap::Trap(std::string name, int price, int atk, int cooldown, std::pair<int, in
 void Trap::Attack(std::vector<Enemy> &ActiveEnemies) {
     UpdateTimer();
     if (Timer == CoolDown) {
+        std::sort(ActiveEnemies.begin(), ActiveEnemies.end());
         for (auto& enemy : ActiveEnemies) {
-            if (InRange(enemy)) enemy.TakeDamage(Atk);
+            if (InRange(enemy)) {
+                enemy.TakeDamage(Atk); // 범위 공격 시 하나만 공격하게 바꿈
+                break;
+            }
         }
         Timer = 0;
     }
@@ -48,10 +54,6 @@ void Trap::UpdateTimer() {
 
 void Trap::Breakdown() {
     TrapState = State::DEAD;
-}
-
-void Trap::FeedSeed() {
-    // TODO: 인벤토리의 특정 농작물 소모 로직과 연계하여 작동 여부 활성화
 }
 
 bool Trap::InRange(Enemy& enemy) {

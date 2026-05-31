@@ -18,6 +18,10 @@ public:
 
     bool Move(float deltaTime);
     void TakeDamage(int damage);
+
+    bool operator<(const Enemy& other) const;
+
+    friend class Farm;
 };
 
 Enemy::Enemy()
@@ -47,3 +51,5 @@ void Enemy::TakeDamage(int damage) {
         EnemyState = State::DEAD;
     }
 }
+
+bool Enemy::operator<(const Enemy& other) const {return Pos < other.Pos;}

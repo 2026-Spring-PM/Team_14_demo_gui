@@ -5,6 +5,8 @@ class BottomUI : public UIBase {
 public:
     BottomUI(const GameState* s) : UIBase(s) {}
 
+    std::string GetName() const override {return "BottomUI";}
+
     void Render() override {
         auto flgs = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove;
         ImGui::SetNextWindowSize({1280, 100});

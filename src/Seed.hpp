@@ -25,6 +25,8 @@ public:
     bool IsGrown() const;
 
     void Water();
+
+    friend class Farm;
 };
 
 Seed::Seed()
