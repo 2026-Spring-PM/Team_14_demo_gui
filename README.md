@@ -18,11 +18,18 @@ bash scripts/docker_run.sh
 ```
 This starts the container and immediately launches ```build/team14_game```.
 
+You can use VNC viewer to play the game.
+
+```
+http://localhost:8080/
+```
+
 **Option B** - Enter the container first, then run manually:
 ```
 bash scripts/docker_run_shell.sh
 ```
-This starts the container and drops you into a bash shell. From inside the container, you can run the app yourself:
+This starts the container and drops you into a bash shell. From inside the container, you can run the app yourself
+However, it may not work due to display bugs some OS has. Please only use it to navigate through /assets:
 ```
 ./build/team14_game
 ```
