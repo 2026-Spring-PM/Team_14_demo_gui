@@ -101,6 +101,6 @@ However, it may not work due to display bugs some OS has. Please only use it to 
 
 ## Team
 
-**Team 14** — 2026 Software Project
+**Team 14** — 2026 Programming Methodology Project
 
 ---
