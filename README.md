@@ -39,10 +39,16 @@ This starts the container and drops you into a bash shell. From inside the conta
 1. Seed Field
 - You can place down seeds
 - It can be grown and be selled
+- Each crop has a different price : 5 / 10 / 20
+- Each crop has a different selling price: 10 / 20 / 35
+- Each crop takes a different time to grow : 30 / 60 / 60
 
 2. Animal Field
 - You can place down Animals
 - Animals will protect you from the thieves
+- Each crop has a different price : 40 / 50 / 60
+- Each Animal has a different attack stat : 10 / 10 / 20
+- Each Animal has a different range : 1x1 / 2x2 / 1x1
 
 **(3-1) Shop**
 - Buy some seeds or animals from the Shop
@@ -57,7 +63,7 @@ This starts the container and drops you into a bash shell. From inside the conta
 - When the time is 18:00, the night starts
 - Thieves would try to break in
 - You should place down traps (or Animals) in the field to protect yourself
-- 
+- Each day, thieves will be stronger, faster, and increase in number
 
 **(5) Random Event**
 - There are 3 Random Events. Events happen when the sun rises.
@@ -69,6 +75,9 @@ This starts the container and drops you into a bash shell. From inside the conta
 
 3. Runaway
 - Animals in the field have a chance to runaway
+
+**(6) What is the goal?**
+- SURVIVE AS LONG AS YOU CAN
 
 ---
 
