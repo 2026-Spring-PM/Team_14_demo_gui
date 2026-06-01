@@ -6,6 +6,6 @@ TAG="0.1.0"
 
 echo "http://localhost:8080"
 
-docker run -it --rm \
+docker run -it --platform linux/amd64 --rm \
   -p 8080:8080 \
   "$IMAGE_NAME:$TAG" bash

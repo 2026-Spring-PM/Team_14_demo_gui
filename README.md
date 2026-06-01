@@ -58,7 +58,7 @@ However, it may not work due to display bugs some OS has. Please only use it to 
 - Animals will protect you from the thieves
 - Each crop has a different price : 40 / 50 / 60
 - Each Animal has a different attack stat : 10 / 10 / 20
-- Each Animal has a different range : 1x1 / 2x2 / 1x1
+- Each Animal has a different range : 1x1 / 2x2 / 1x1 (However, the range is **NOT** implemented yet....)
 
 **(3-1) Shop**
 - Buy some seeds or animals from the Shop
