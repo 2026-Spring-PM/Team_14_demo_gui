@@ -30,7 +30,45 @@ This starts the container and drops you into a bash shell. From inside the conta
 
 ## Game System
 
-NOT DONE YET
+**(1) GUI**
+- Implemented using a GUI system
+- Play using Mouse (Maybe ESC key for pause)
+
+**(2) Field**
+- There are 2 kinds of fields
+1. Seed Field
+- You can place down seeds
+- It can be grown and be selled
+
+2. Animal Field
+- You can place down Animals
+- Animals will protect you from the thieves
+
+**(3-1) Shop**
+- Buy some seeds or animals from the Shop
+- You can also buy some bullets
+- If you're out of bullets when the thieves break-in, GAMEOVER
+
+**(3-2) Mini-game in the Shop**
+- Play a roulette game in the Shop by paying $10
+- Who knows? You might win BIG
+
+**(4) Night System**
+- When the time is 18:00, the night starts
+- Thieves would try to break in
+- You should place down traps (or Animals) in the field to protect yourself
+- 
+
+**(5) Random Event**
+- There are 3 Random Events. Events happen when the sun rises.
+1. Pest
+- Some crops die because of Pests
+
+2. Drought
+- Plants now dry 2x faster
+
+3. Runaway
+- Animals in the field have a chance to runaway
 
 ---
 
