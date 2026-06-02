@@ -8,11 +8,8 @@ A C++ game project built with SDL/SFML, distributed via Docker with GUI support.
 
 ### 1. Pull the Image
 ```
-docker pull --platform linux/amd64 ghcr.io/2026-spring-pm/team_14/team14_project:0.1.0
+docker pull --platform linux/amd64 dyddl2082/team14_project:0.1.0
 ```
-
-> **Note:**
-> You must be authenticated with `docker login ghcr.io` before pulling!
 
 ### 2. Run the app
 **Option A** - Run automatically:
